@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Dashboard MUNDIAL - Cobertura Vendedores</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #0d0f14;
+  --card: #141720;
+  --card2: #1a1e2a;
+  --border: #252a38;
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --mogul: #f97316;
+  --mentho: #22d3ee;
+  --rocklets: #a855f7;
+  --saladix: #10b981;
+  --tortuguita: #f43f5e;
+  --ok: #22c55e;
+  --warn: #eab308;
+  --bad: #ef4444;
+  --accent: #3b82f6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #1a1e2a 0%, #0d0f14 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.logo span {
+  color: var(--tortuguita);
+}
+
+.badge-mes {
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* VENDEDOR SELECT */
+.filter-bar {
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+
+.filter-bar select {
+  flex: 1;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'Barlow', sans-serif;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.filter-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* MAIN CONTENT */
+.content {
+  padding: 12px 16px;
+}
+
+/* RESUMEN VENDEDOR */
+.vendor-header {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.vendor-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.vendor-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.vendor-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.vendor-stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  color: var(--accent);
+}
+
+.vendor-stat-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* LINES GRID */
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  margin-top: 14px;
+}
+
+.lines-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.line-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.line-card:active { transform: scale(0.98); }
+
+.line-card.selected { border-color: var(--accent); }
+
+.line-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.line-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.line-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-ok { background: rgba(34,197,94,0.15); color: var(--ok); }
+.badge-warn { background: rgba(234,179,8,0.15); color: var(--warn); }
+.badge-bad { background: rgba(239,68,68,0.15); color: var(--bad); }
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.progress-pct {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  min-width: 44px;
+  text-align: right;
+}
+
+.line-amounts {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.line-amount-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.line-amount-val {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+.line-amount-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* META LINE */
+.meta-marker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background: rgba(255,255,255,0.4);
+}
+
+/* CLIENTES TAB */
+.search-box {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'Barlow', sans-serif;
+  width: 100%;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+.line-filter-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-bottom: 10px;
+}
+.line-filter-row::-webkit-scrollbar { display: none; }
+
+.lf-btn {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+}
+
+.lf-btn.active {
+  color: #fff;
+  border-color: currentColor;
+}
+
+.cliente-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cliente-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--card);
+  border-radius: 6px;
+  gap: 8px;
+}
+
+.cliente-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-ok { background: var(--ok); }
+.status-no { background: var(--bad); opacity: 0.6; }
+
+.cliente-name {
+  font-size: 13px;
+  flex: 1;
+}
+
+.cliente-barrio {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.cliente-lines {
+  display: flex;
+  gap: 3px;
+}
+
+.cl-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.cl-dot.bought { opacity: 1; }
+
+/* HISTORICO TAB */
+.hist-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.hist-table-head {
+  display: grid;
+  grid-template-columns: 1fr repeat(4, 80px);
+  padding: 8px 10px;
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.hist-row {
+  display: grid;
+  grid-template-columns: 1fr repeat(4, 80px);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  gap: 4px;
+}
+
+.hist-row:last-child { border-bottom: none; }
+
+.hist-row-abril { background: rgba(59,130,246,0.05); }
+
+.hist-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.hist-cell-val {
+  font-weight: 600;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+}
+
+.hist-cell-sub {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* RESUMEN GENERAL TAB */
+.summary-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sum-row {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sum-row:last-child { border-bottom: none; }
+
+.sum-row-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.sum-vendor-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sum-clientes {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.sum-lines-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sum-line-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+/* EMPTY STATE */
+.empty {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--muted);
+}
+
+.empty-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+/* LEGEND */
+.legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* LOADING */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* TRENDLINE MINI */
+.trend-bar-row {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 24px;
+}
+
+.trend-bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  min-height: 3px;
+  transition: height 0.3s;
+}
+
+/* COUNT CHIPS */
+.chip-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.chip {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* Santiago romero note */
+.note-banner {
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #93c5fd;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">🌍 <span>MUNDIAL</span> Promo</div>
+    <div class="badge-mes">Abril 2026</div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('cobertura')">Cobertura</button>
+    <button class="tab" onclick="switchTab('clientes')">Clientes</button>
+    <button class="tab" onclick="switchTab('historico')">Histórico</button>
+    <button class="tab" onclick="switchTab('resumen')">Resumen</button>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">Vendedor</span>
+  <select id="vendedorSelect" onchange="onVendedorChange()">
+  </select>
+</div>
+
+<div class="content">
+
+  <!-- TAB: COBERTURA -->
+  <div id="tab-cobertura" class="tab-panel active">
+    <div id="cobertura-content"></div>
+  </div>
+
+  <!-- TAB: CLIENTES -->
+  <div id="tab-clientes" class="tab-panel">
+    <div id="clientes-content"></div>
+  </div>
+
+  <!-- TAB: HISTORICO -->
+  <div id="tab-historico" class="tab-panel">
+    <div id="historico-content"></div>
+  </div>
+
+  <!-- TAB: RESUMEN GENERAL -->
+  <div id="tab-resumen" class="tab-panel">
+    <div id="resumen-content"></div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {"Julio Cesar Da Silva Gomez":{"total_clientes_ruta":217,"clientes_ruta":[{"codigo":"9235","nombre":"GL COMUNICACIONES-1 DE EGHEVARRIA, VI","barrio":"Bernardino","dias":"Lunes"},{"codigo":"11277","nombre":"Alicia Raquel Benitez","barrio":"Chiribuelo","dias":"Viernes"},{"codigo":"9851","nombre":"Faustino Gonzalez","barrio":"Chiribuelo","dias":"Sabado (1 vez al mes)"},{"codigo":"9831","nombre":"Eladía Caballero","barrio":"Chiribuelo","dias":"Sabado (1 vez al mes)"},{"codigo":"9846","nombre":"Raimundo Figueredo","barrio":"Chiribuelo","dias":"Lunes"},{"codigo":"10242","nombre":"Ana Eulalia Sarmiento","barrio":"Chiribuelo","dias":"Sabado (1 vez al mes)"},{"codigo":"11410","nombre":"Despensa Econ o","barrio":"Chiribuelo","dias":"Sabado (1 vez al mes)"},{"codigo":"9845","nombre":"Lisa Recalde","barrio":"Ciudad","dias":"Sabado (1 vez al mes)"},{"codigo":"11410","nombre":"María Raquel Flores","barrio":"Ciudad","dias":"Sabado (1 vez al mes)"},{"codigo":"8952","nombre":"Lisa Recalde","barrio":"Ciudad","dias":"Sabado (1 vez al mes)"},{"codigo":"8952","nombre":"DESPENSA SAN MIGUEL","barrio":"Ciudad","dias":"Sabado (1 vez al mes)"},{"codigo":"11397","nombre":"Distribuidora Danielito","barrio":"Defensores del","dias":"Martes"},{"codigo":"11422","nombre":"Cyntia Lorena Carvalio Torres","barrio":"Jardín Aurora","dias":"Martes"},{"codigo":"8729","nombre":"DESPENSA GUSTAVITO","barrio":"Jardín Aurora","dias":"Miercoles"},{"codigo":"2113","nombre":"DESPENSA JARA","barrio":"Jardín Aurora","dias":"Miercoles"},{"codigo":"3286","nombre":"FABIO ROLANDO FLOR","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"3317","nombre":"DESPENSA ARACELY de Maria Ramona Gonzalez","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"9994","nombre":"Mario Mussi","barrio":"Jardín Aurora","dias":"Lunes"},{"codigo":"1398","nombre":"SILVIO ACOSTA DELPADRE","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"10645","nombre":"Garcete Ayala Luis César","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"8542","nombre":"CONVENIENCIA LUCE BEER","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"10713","nombre":"SANGUINA MARTINEZ, MARGARITA","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"11309","nombre":"Despensa M.D","barrio":"Jardín Aurora","dias":"Martes"},{"codigo":"11058","nombre":"Nelson Fretes","barrio":"Jardín Aurora","dias":"Lunes"},{"codigo":"10813","nombre":"CABARAS, ALMA LIZ","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"8449","nombre":"DESPENSA GERARDITO","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"1201","nombre":"Feliciana Silva","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"8966","nombre":"DESPENSA CIUDAD NUEVA","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"8206","nombre":"DESPENSA TAJ Y 2","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"8271","nombre":"DESPENSA ALANNYS","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"8861","nombre":"CARNICERIA SAN VALENTIN","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"9608","nombre":"DE BENITEZ, ADRIAN","barrio":"Jardín Aurora","dias":"Jueves"},{"codigo":"11414","nombre":"RUIZ DIAZ CENTURION, HUGO MIGUEL","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"8144","nombre":"MARIBEL","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"9006","nombre":"DESPENSA E CLARA","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"8772","nombre":"HILDA PAREDES","barrio":"Jardín Aurora","dias":"Viernes"},{"codigo":"8312","nombre":"Romona Dagiovanni","barrio":"Jardín Aurora","dias":"Lunes"},{"codigo":"11362","nombre":"Felipa Zoria Gamarra","barrio":"Jardín Aurora","dias":"Sabado"},{"codigo":"10881","nombre":"Claudia Ramirez","barrio":"Lorto picada","dias":"Lunes"},{"codigo":"10424","nombre":"Vidalia Gauto","barrio":"Lorto picada","dias":"Lunes"},{"codigo":"10878","nombre":"Diego Jara Gonzalez","barrio":"Matusí","dias":"Viernes"},{"codigo":"9956","nombre":"Griselda de Chavez","barrio":"Obrero","dias":"Miercoles"},{"codigo":"1268","nombre":"LIBRERIA MABEL","barrio":"Obrero","dias":"Miercoles"},{"codigo":"8434","nombre":"DESPENSA ANA","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9169","nombre":"Amado Duarte","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9969","nombre":"Milciades Bogado","barrio":"Obrero","dias":"Miercoles"},{"codigo":"10028","nombre":"Rodorfo Aponte","barrio":"Obrero","dias":"Miercoles"},{"codigo":"10293","nombre":"Celia Yolanda Alan Rojas","barrio":"Obrero","dias":"Miercoles"},{"codigo":"10784","nombre":"Angelica Cabrera","barrio":"Obrero","dias":"Lunes"},{"codigo":"9180","nombre":"DESPENSA AL BORADA","barrio":"Obrero","dias":"Lunes"},{"codigo":"9165","nombre":"Lidio Torres","barrio":"Obrero","dias":"Lunes"},{"codigo":"11300","nombre":"DESPENSA LA AMISTAD","barrio":"Obrero","dias":"Lunes"},{"codigo":"10163","nombre":"EDGAR GUSTAVO GARCIA ORTIZ","barrio":"Obrero","dias":"Martes"},{"codigo":"8310","nombre":"24 HS JR DE BENITEZ, JOSE RODRIGO","barrio":"Obrero","dias":"Martes"},{"codigo":"9756","nombre":"Valeriana Ferreira Duarte","barrio":"Obrero","dias":"Martes"},{"codigo":"9763","nombre":"CASTILLO LOPEZ, EDILSON GABRIEL","barrio":"Obrero","dias":"Martes"},{"codigo":"9881","nombre":"M.M COMERCIAL","barrio":"Obrero","dias":"Martes"},{"codigo":"3278","nombre":"GODOY ALVARENGA, JAVIER","barrio":"Obrero","dias":"Martes"},{"codigo":"8866","nombre":"Blanca Eliza Gonzalez Gayoso","barrio":"Obrero","dias":"Martes"},{"codigo":"8202","nombre":"DESPENSA TRIUNFO","barrio":"Obrero","dias":"Martes"},{"codigo":"9184","nombre":"COMERCIAL AVENIDA","barrio":"Obrero","dias":"Martes"},{"codigo":"8877","nombre":"Josefina Rios Sanchez","barrio":"Obrero","dias":"Martes"},{"codigo":"8884","nombre":"BLAS VERON AREVALOS","barrio":"Obrero","dias":"Martes"},{"codigo":"8514","nombre":"DESPENSA MARIO","barrio":"Obrero","dias":"Martes"},{"codigo":"8526","nombre":"MIL SABORES","barrio":"Obrero","dias":"Martes"},{"codigo":"9747","nombre":"Porfirio Rodas Torres","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9769","nombre":"Claudia Luisa Ibarra","barrio":"Obrero","dias":"Miercoles"},{"codigo":"11392","nombre":"R Beer","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"8893","nombre":"Blanca Sonia Valdez","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"11119","nombre":"Despensa Modesta","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"8474","nombre":"COMERCIAL CARMENCITA","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"11249","nombre":"Comercial San Miguel","barrio":"Obrero 2","dias":"Martes"},{"codigo":"10291","nombre":"Juan Ramon Diaz","barrio":"Obrero 2","dias":"Martes"},{"codigo":"8690","nombre":"DESPENSA CHELY","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"9698","nombre":"FERREIRA VALIENTE, CONSTANCIO","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"10984","nombre":"Casa de Carnes Oscarmes","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"8160","nombre":"R Z 24 HS","barrio":"Obrero 2","dias":"Lunes"},{"codigo":"8044","nombre":"AKI HIELO","barrio":"Obrero 2","dias":"Lunes"},{"codigo":"8899","nombre":"MINI CONVENIENCIA MILI","barrio":"Obrero 2","dias":"Lunes"},{"codigo":"9979","nombre":"nlisa estache","barrio":"Obrero 2","dias":"Lunes"},{"codigo":"9932","nombre":"Maria Teresa Medina Rodriguez","barrio":"Obrero 2","dias":"Lunes"},{"codigo":"8307","nombre":"DESPENSA WV","barrio":"Obrero 2","dias":"Lunes"},{"codigo":"11142","nombre":"Genesi Maria Del Mar","barrio":"Obrero 2","dias":"Lunes"},{"codigo":"9896","nombre":"BAREIRO MINELLA, LIDIA","barrio":"Obrero 2","dias":"Jueves"},{"codigo":"8337","nombre":"Irene Echeque","barrio":"Obrero 2","dias":"Jueves"},{"codigo":"10211","nombre":"Elsa Torres","barrio":"Santa Ana","dias":"Miercoles"},{"codigo":"10954","nombre":"DESPENSA ANA","barrio":"Santa Ana","dias":"Miercoles"},{"codigo":"11393","nombre":"Rafael 24 hs","barrio":"Santa Ana","dias":"Miercoles"},{"codigo":"11426","nombre":"Matilde Andrea Ponce Alfonso","barrio":"Santa Ana","dias":"Miercoles"},{"codigo":"10548","nombre":"Despensa Luz Mabel","barrio":"Santa Clara","dias":"Martes"},{"codigo":"10415","nombre":"Virginia Villasboa","barrio":"Santa Clara","dias":"Lunes"},{"codigo":"10464","nombre":"Eudalio Sanchez","barrio":"Santa Clara","dias":"Lunes"},{"codigo":"10413","nombre":"Concepcion Garcia","barrio":"Santa Clara","dias":"Lunes"},{"codigo":"10417","nombre":"Antonia Sanchez","barrio":"Santa Clara","dias":"Lunes"},{"codigo":"11047","nombre":"QUEVEDO GRANCE, LUIS ALCIDES","barrio":"Santa Clara","dias":"Lunes"},{"codigo":"11109","nombre":"DESPENSA JAZMIN","barrio":"Santa Clara","dias":"Lunes"},{"codigo":"8120","nombre":"DESPENSA 3R","barrio":"Santa Clara","dias":"Martes"},{"codigo":"8293","nombre":"Basilia Perez","barrio":"Terraza","dias":"Martes"},{"codigo":"1238","nombre":"Despensa San Ramon","barrio":"Terraza","dias":"Martes"},{"codigo":"11396","nombre":"DESPENSA 3R","barrio":"Terraza","dias":"Martes"},{"codigo":"8904","nombre":"DESPENSA MG","barrio":"Terraza","dias":"Martes"},{"codigo":"11019","nombre":"ALVAREZ FLEITAS, VICENTE","barrio":"Terraza","dias":"Martes"},{"codigo":"9919","nombre":"Zunilda Garcete","barrio":"Terraza","dias":"Sabado (1 vez al mes)"},{"codigo":"11140","nombre":"Eliane Palacios","barrio":"Villa Industrial","dias":"Sabado (1 vez al mes)"},{"codigo":"9985","nombre":"Natalia Beatriz Cardozo Gimenez","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"9236","nombre":"Sonia Martinez","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"9087","nombre":"Gisselly Fabiola Candia","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"8865","nombre":"AMARILLA, CELSA","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"9766","nombre":"Laticia Diana Palacios Echeverria","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"8844","nombre":"DESPENSA ARACELI","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"10771","nombre":"Yeny Escobar","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"10608","nombre":"Lina Mabel","barrio":"Villa Industrial","dias":"Martes"},{"codigo":"8547","nombre":"COMERCIAL SAN CAYETANO","barrio":"Villa Industrial","dias":"Martes"},{"codigo":"9939","nombre":"Elvira Samaniego","barrio":"Villa Industrial","dias":"Martes"},{"codigo":"11253","nombre":"Isabel Jara","barrio":"Villa Industrial","dias":"Martes"},{"codigo":"8428","nombre":"DESPENSA EDER","barrio":"Villa Industrial","dias":"Martes"},{"codigo":"11395","nombre":"Comercial Bonanza","barrio":"Villa Industrial","dias":"Miercoles"},{"codigo":"10623","nombre":"Lidia Romero","barrio":"Villa Industrial","dias":"Miercoles"},{"codigo":"9165","nombre":"DESPENSA CHELITA","barrio":"Villa Industrial","dias":"Miercoles"},{"codigo":"10883","nombre":"Sonia Amaral","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"8876","nombre":"GABI NOVEDADES","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"11175","nombre":"Karen Barrios Maldonado","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"9410","nombre":"DESPENSA EL TOQUE","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"8386","nombre":"Salvador Mece","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"9155","nombre":"Despensa Carol","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"10922","nombre":"Sara Marly Alfonso Saldivar","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"11374","nombre":"KARINA COMERC","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"8613","nombre":"CATALINO ANTONIO GAYOSO","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"10739","nombre":"FRIGORIFICO CONCEPCION S.A.","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"8408","nombre":"DESPENSA 2 HERMANOS","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"8270","nombre":"DESPENSA DORIS","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"10096","nombre":"Rosa Maria Amarilla Nu","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"9534","nombre":"Jose Ana Jara Cabrera","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"10070","nombre":"Saul Eladio Cristaldo Acosta","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"11248","nombre":"Doralle Nuñez","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"9801","nombre":"DESPENSA NIÑO JESUS","barrio":"Matusí","dias":"Sabado (1 vez al mes)"},{"codigo":"9332","nombre":"Despensa Ciudad Nueva 1","barrio":"Matusí","dias":"Miercoles"},{"codigo":"10995","nombre":"Ana Griselda Martinez","barrio":"Matusí","dias":"Miercoles"},{"codigo":"10297","nombre":"Yonny Augusto Amarile","barrio":"Matusí","dias":"Lunes"},{"codigo":"11425","nombre":"DESPENSA LA AMISTAD","barrio":"Matusí","dias":"Lunes"},{"codigo":"8827","nombre":"DESPENSA LA AMISTAD","barrio":"Matusí","dias":"Lunes"},{"codigo":"10047","nombre":"Despensa Nauco","barrio":"Matusí","dias":"Martes"},{"codigo":"10190","nombre":"JOSEFA NISIDAO VERA","barrio":"Matusí","dias":"Martes"},{"codigo":"10100","nombre":"COMERCIAL ERWIN","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9181","nombre":"Gustavo Ariel Jara Gonzalez","barrio":"Obrero","dias":"Miercoles"},{"codigo":"11286","nombre":"GL COMUNICACIONES 3, DE ECHEEVERRIA, VISI","barrio":"Obrero","dias":"Miercoles"},{"codigo":"1210","nombre":"DESPENSA MARISOL","barrio":"Obrero","dias":"Miercoles"},{"codigo":"10767","nombre":"Celso Areco","barrio":"Obrero","dias":"Miercoles"},{"codigo":"8455","nombre":"DESPENSA VIRGEN DE CAACUPE","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9367","nombre":"Despensa Camilla","barrio":"Obrero","dias":"Lunes"},{"codigo":"9976","nombre":"Rodrigo Benitez","barrio":"Obrero","dias":"Lunes"},{"codigo":"11355","nombre":"ALICE VALENZUELA","barrio":"Obrero","dias":"Lunes"},{"codigo":"9800","nombre":"Diego Cantauppi","barrio":"Obrero","dias":"Lunes"},{"codigo":"11388","nombre":"Carniceria Eliz","barrio":"Obrero","dias":"Lunes"},{"codigo":"11050","nombre":"Ana Lucia Gonzalez Rojas","barrio":"Obrero","dias":"Lunes"},{"codigo":"9193","nombre":"Joel Elias","barrio":"Obrero","dias":"Miercoles"},{"codigo":"11378","nombre":"Ruben Quevedo","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9890","nombre":"CONVENIENCIA AL PASO NUEVO","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9191","nombre":"Virginia Bogado vda de Chamorro","barrio":"Obrero","dias":"Miercoles"},{"codigo":"10036","nombre":"Amry Romero","barrio":"Obrero","dias":"Miercoles"},{"codigo":"9770","nombre":"Fermin Maldana","barrio":"Obrero","dias":"Lunes"},{"codigo":"8504","nombre":"E Y G BEER","barrio":"Obrero","dias":"Lunes"},{"codigo":"9488","nombre":"DESPENSA CACHITO DE SANCHEZ, CLAUDIANA","barrio":"Obrero","dias":"Lunes"},{"codigo":"9794","nombre":"FRUTERIA MICAELA","barrio":"Obrero","dias":"Lunes"},{"codigo":"8479","nombre":"ISMAELA CAROLINA ROMERO GUERRERO","barrio":"Obrero","dias":"Lunes"},{"codigo":"9095","nombre":"COPETIN NUEVA ALBORADA","barrio":"Obrero","dias":"Martes"},{"codigo":"9788","nombre":"DESPENSA 3 HERMANOS","barrio":"Obrero","dias":"Martes"},{"codigo":"9797","nombre":"Eloisa Fernandez","barrio":"Obrero","dias":"Martes"},{"codigo":"3285","nombre":"DESPENSA LUZ MABEL","barrio":"Obrero","dias":"Martes"},{"codigo":"9396","nombre":"DESPENSA YANINE","barrio":"Obrero","dias":"Martes"},{"codigo":"9773","nombre":"Aminda Gimenez","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"10592","nombre":"Iris Fernandez","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"11252","nombre":"ARAUJO-LOPEZ, JULIAN","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"10552","nombre":"COMERCIAL DON JULIO","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"10954","nombre":"DESPENSA ANA","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"11393","nombre":"Rafael 24 hs","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"10211","nombre":"Elsa Torres","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"8163","nombre":"KARINA COMERC","barrio":"Santa Tereza","dias":"Lunes"},{"codigo":"8337","nombre":"comercio de Carme Soo por a","barrio":"Santa Ana","dias":"Miercoles"},{"codigo":"9773","nombre":"Aminda Gimenez","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"8658","nombre":"DESPENSA SAN ANTONIO","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"11267","nombre":"Matilde Andrea Ponce Alfonso","barrio":"Santa Tereza","dias":"Jueves"},{"codigo":"10828","nombre":"FERMINA EULALIA BLANCO MARTINEZ","barrio":"Santa Clara","dias":"Martes"},{"codigo":"9430","nombre":"DESPENSA SAN ANTONIO","barrio":"Santa Clara","dias":"Martes"},{"codigo":"8131","nombre":"Lisa Soledad Vega Diaz","barrio":"Terraza","dias":"Martes"},{"codigo":"11047","nombre":"QUEVEDO GRANCE, LUIS ALCIDES","barrio":"Terraza","dias":"Martes"},{"codigo":"11109","nombre":"DESPENSA JAZMIN","barrio":"Terraza","dias":"Martes"},{"codigo":"8120","nombre":"MARCIANITO COMERCIAL","barrio":"Terraza","dias":"Martes"},{"codigo":"11396","nombre":"DESPENSA JAZMIN","barrio":"Terraza","dias":"Lunes"},{"codigo":"8293","nombre":"Basilia Perez","barrio":"Terraza","dias":"Lunes"},{"codigo":"1238","nombre":"Despensa San Ramon","barrio":"Terraza","dias":"Lunes"},{"codigo":"9919","nombre":"Zunilda Garcete","barrio":"Terraza","dias":"Sabado (1 vez al mes)"},{"codigo":"11019","nombre":"ALVAREZ FLEITAS, VICENTE","barrio":"Terraza","dias":"Sabado (1 vez al mes)"},{"codigo":"8271","nombre":"SUPER CARNES","barrio":"Terraza","dias":"Sabado (1 vez al mes)"},{"codigo":"9765","nombre":"Isabel Lercano","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"10969","nombre":"Victor Hugo Godoy","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"10989","nombre":"Comercial Aurora","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"11092","nombre":"DESPENSA CLAUDIO","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"9866","nombre":"Delfina Cardozo","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"8509","nombre":"Luisa Rebeca Ocampos Riveros","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"8951","nombre":"Teresa Martinez","barrio":"Villa Industrial","dias":"Sabado"},{"codigo":"8417","nombre":"TERRAZA BEER DE MONGES ESPINOLA, NILDA N","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"10071","nombre":"Yeny Mabel","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"10608","nombre":"COMERCIAL SAN CAYETANO","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"9547","nombre":"Elvira Samaniego","barrio":"Villa Industrial","dias":"Jueves"},{"codigo":"11253","nombre":"DESPENSA MARIA LUISA","barrio":"Villa Industrial","dias":"Lunes"},{"codigo":"6428","nombre":"Libroda Martinez","barrio":"Villa Industrial","dias":"Lunes"},{"codigo":"10774","nombre":"JAIME GONZALEZ, WILSON RAMON","barrio":"Villa Industrial","dias":"Lunes"},{"codigo":"9981","nombre":"Osvalda martinez","barrio":"Villa Industrial","dias":"Lunes"},{"codigo":"9200","nombre":"DESPENSA EDER","barrio":"Villa Industrial","dias":"Viernes"},{"codigo":"9640","nombre":"DESPENSA Y CARNICERIA 2 MARCOS","barrio":"Villa Industrial","dias":"Viernes"},{"codigo":"10774","nombre":"Ruben Dario Recalde Rio","barrio":"Villa Industrial","dias":"Viernes"},{"codigo":"8303","nombre":"COMERCIAL L Y E","barrio":"Villa Industrial","dias":"Viernes"},{"codigo":"8595","nombre":"DESPENSA EDER","barrio":"Villa Industrial","dias":"Viernes"},{"codigo":"9903","nombre":"Carlos Medina","barrio":"Villa Industrial","dias":"Lunes"},{"codigo":"9986","nombre":"Pasteleria C Mari","barrio":"Villa Industrial","dias":"Lunes"},{"codigo":"11187","nombre":"Enriqueta Coronel","barrio":"Villa Industrial","dias":"Lunes"}],"lines":{"MOGUL":{"compradores":["AKI HIELO","AMARILLA, CELSA","Ana Lucia Gonzzalez Rojas","Blanca Sonia Valdez","Celso Areco","Comercial Aurora","CONVENIENCIA LUCE BEER","DESPENSA 2 HERMANOS","DESPENSA ARACELY de  Maria Ramona Gonzalez","DESPENSA CAROL","DESPENSA CHELITA","DESPENSA JARA","Despensa M.D","DESPENSA MARISOL","DESPENSA MILI","DESPENSA SAN ANTONIO","Despensa San Ramon","DESPENSA TAJY 2","DESPENSA TRIUNFO","DESPENSA VIRGEN DE CAACUPE","Despensa Y Carniceria San Miguel Arcangel","DESPENSA Ё REINA","Eliane Palacios","FABIO ROLANDO FLOR","FERMINA EULALIA BLANCO MARTINEZ","Garcete Ayala Luis Cesar","GL COMUNICACIONES 3, DE ECHEVERRIA, VISI","Gloria Recalde","Irene Echague","Josefina Ríos Sanchez","Lidia Pe񡠖aldez","Lidia Romero","Lina Mabel","Mario Mussi","Matilde Andrea Ponce Alfonso","MIL SABORES","Natalia Beatriz Cardozo Gimenez","Pablo Espinola","R.Z 24 HS","Rosa Maria Amarilla Nu񥺠","SANGUINA MARTINEZ, MARGARITA","SILVIO ACOSTA DELPADRE","Sonia Amaral","Victor Hugo Godoy","Yonny Augusto Amante"],"total_compradores":45,"total_vendido":2100570,"meta_pct":0.8,"cobertura_pct":0.2074},"MENTHO PLUS":{"compradores":["COMERCIAL CARMENCITA","Despensa Camila","DESPENSA SAN MIGUEL","DESPENSA TRIUNFO","Garcete Ayala Luis Cesar"],"total_compradores":5,"total_vendido":155700,"meta_pct":0.6,"cobertura_pct":0.023},"ROCKLETS":{"compradores":["AKI HIELO","AMARILLA, CELSA","CARNICERIA SAN VALENTIN","Claudia Luisa Ibarra","Comercial Aurora","COMERCIAL DON JULIO","COMERCIAL PEQUEÑA","DESPENSA 2 HERMANOS","DESPENSA 3 HERMANOS","DESPENSA ARACELY de  Maria Ramona Gonzalez","Despensa Camila","DESPENSA CHELITA","DESPENSA CLAUDIO","DESPENSA DORIS","DESPENSA EDER","DESPENSA GERARDITO","DESPENSA JARA","DESPENSA JAZMIN","DESPENSA LA AMISTAD","DESPENSA MARISOL","DESPENSA NIÑO JESUS","DESPENSA SAN ANTONIO","DESPENSA TAJY 2","DESPENSA TRIUNFO","DESPENSA W.V","Despensa С Anselma","Diego Cantaluppi","Elvira Samaniego","FABIO ROLANDO FLOR","FERMINA EULALIA BLANCO MARTINEZ","Garcete Ayala Luis Cesar","GL COMUNICACIONES 3, DE ECHEVERRIA, VISI","Gustavo Ariel Jara Gonzalez","Irene Echague","Isabel Jara","Isabel Lezcano","Jose Ana Jara Cabrera","Leticia Diana Palacios Echeverria","Librada Martinez","LIBRERIA MABEL","Lidia Pe񡠖aldez","Lidia Romero","Lina Mabel","Luisa Rebeca Ocampos Riveros","Mario Mussi","Natalia Beatriz Cardozo Gimenez","Nelson Fretes","ÑA DANI","Pablo Espinola","SANGUINA MARTINEZ, MARGARITA","SILVIO ACOSTA DELPADRE","Virginia Bogado vda de Chamorro","Yeny Escobar"],"total_compradores":53,"total_vendido":3008977,"meta_pct":0.8,"cobertura_pct":0.2442},"SALADIX":{"compradores":["AMARILLA, CELSA","Ana Lucia Gonzzalez Rojas","Anny Romero","Basilia Perez","Blanca Eliza Gonzales Gayoso","Blanca Sonia Valdez","Celso Areco","COMERCIAL AVENIDA","COMERCIAL DON JULIO","CONVENIENCIA LUCE BEER","CRISTIAN BEER","Despensa Camila","DESPENSA CLAUDIO","DESPENSA EDER","DESPENSA JARA","DESPENSA MILI","DESPENSA SAN ANTONIO","DESPENSA SAN MIGUEL","DESPENSA TAJY 2","DESPENSA TRIUNFO","DESPENSA VIRGEN DE CAACUPE","DESPENSA Ё REINA","Doraliz Nuñez","Edgar Daniel Prieto","Eliane Palacios","Elsa larrea","FABIO ROLANDO FLOR","Fermin Maidana","FERMINA EULALIA BLANCO MARTINEZ","Garcete Ayala Luis Cesar","GL COMUNICACIONES 3, DE ECHEVERRIA, VISI","Gloria Recalde","Gustavo Ariel Jara Gonzalez","Irene Echague","Isabel Lezcano","ISMAELA CAROLINA ROMERO GUERRERO","Josefina Ríos Sanchez","Leticia Diana Palacios Echeverria","Librada Martinez","LIBRERIA MABEL","Lidia Pe񡠖aldez","Lidia Romero","M.M COMERCIAL","Mario Mussi","Natalia Beatriz Cardozo Gimenez","Pablo Espinola","Pasteleria  С Mari","Porfirio Rodas Torres","QUEVEDO GRANCE, LUIS ALCIDES","Rapai 24 hs","Victor Hugo Godoy","Yeny Escobar","Yonny Augusto Amante"],"total_compradores":53,"total_vendido":4164571,"meta_pct":0.8,"cobertura_pct":0.2442},"TORTUGUITA":{"compradores":["AKI HIELO","ALICE VALENZUELA","AMARILLA, CELSA","Ana Lucia Gonzzalez Rojas","Basilia Perez","Blanca Eliza Gonzales Gayoso","CARNICERIA SAN VALENTIN","Comercial Aurora","COMERCIAL AVENIDA","Comercial Bonanza","COMERCIAL CARMENCITA","COMERCIAL SAN CAYETANO","Comercial San Miguel","CONVENIENCIA LUCE BEER","COPETIN NUEVA ALBORADA","CRISTIAN BEER","Delfina Cardozo","DESPENSA 2 HERMANOS","DESPENSA 3R","DESPENSA ARACELY de  Maria Ramona Gonzalez","DESPENSA CACHITO DE SANCHEZ, CLAUDIANA","Despensa Camila","DESPENSA CHELY","DESPENSA CLAUDIO","DESPENSA EDER","DESPENSA GERARDITO","DESPENSA JARA","DESPENSA JAZMIN","DESPENSA LUZ MABEL","DESPENSA MARISOL","DESPENSA MILI","DESPENSA RAQUELITA","DESPENSA SAN ANTONIO","DESPENSA SAN MIGUEL","Despensa San Ramon","DESPENSA VIRGEN DE CAACUPE","DESPENSA W.V","DESPENSA Y CARNICERIA 2 MARCOS","Despensa Y Carniceria San Miguel Arcangel","DESPENSA Ё REINA","Despensa С Anselma","Diego Cantaluppi","Doraliz Nuñez","Eliane Palacios","Eloisa Fernandez","Elsa larrea","Elvira Samaniego","FABIO ROLANDO FLOR","Feliciana Silva","Felipa Zoria Gamarra","FERMINA EULALIA BLANCO MARTINEZ","FERREIRA VALIENTE, CONSTANCIO","Gisselly Fabiola Candia","GL COMUNICACIONES 3, DE ECHEVERRIA, VISI","Gloria Recalde","Griselda de Chavez","Jose Ana Jara Cabrera","karen Barrios Maldonado","Librada Martinez","LIBRERIA MABEL","Lidia Pe񡠖aldez","Lina Mabel","Luisa Rebeca Ocampos Riveros","M.M COMERCIAL","MARCIANITO COMERCIAL","Maria Teresa Medina Rodriguez","Mario Mussi","MINI CONVENENCIA MILI","Natalia Beatriz Cardozo Gimenez","Nelson Fretes","nilsa esteche","Osvalda martinez","Pablo Espinola","Pasteleria  С Mari","QUEVEDO GRANCE, LUIS ALCIDES","R.Z 24 HS","Rodrigo Benítez","Rosa Maria Amarilla Nu񥺠","SANGUINA MARTINEZ, MARGARITA","SILVIO ACOSTA DELPADRE","Teresa Martinez","TERRAZA BEER DE MONGES ESPINOLA, NILDA N","Victor Hugo Godoy","Virginia Bogado vda de Chamorro","Yonny Augusto Amante"],"total_compradores":85,"total_vendido":12349113,"meta_pct":0.9,"cobertura_pct":0.3917}},"historico":{"01-Enero":{"MOGUL":{"compradores":49,"vendido":3152371,"cobertura_pct":0.2258},"MENTHO PLUS":{"compradores":13,"vendido":560520,"cobertura_pct":0.0599},"ROCKLETS":{"compradores":84,"vendido":5223885,"cobertura_pct":0.3871},"SALADIX":{"compradores":61,"vendido":4316042,"cobertura_pct":0.2811},"TORTUGUITA":{"compradores":132,"vendido":36323157,"cobertura_pct":0.6083}},"02-Febrero":{"MOGUL":{"compradores":66,"vendido":5607854,"cobertura_pct":0.3041},"MENTHO PLUS":{"compradores":9,"vendido":352689,"cobertura_pct":0.0415},"ROCKLETS":{"compradores":75,"vendido":8134671,"cobertura_pct":0.3456},"SALADIX":{"compradores":62,"vendido":5369835,"cobertura_pct":0.2857},"TORTUGUITA":{"compradores":123,"vendido":32514875,"cobertura_pct":0.5668}},"03-Marzo":{"MOGUL":{"compradores":66,"vendido":6588862,"cobertura_pct":0.3041},"MENTHO PLUS":{"compradores":12,"vendido":611987,"cobertura_pct":0.0553},"ROCKLETS":{"compradores":80,"vendido":5540719,"cobertura_pct":0.3687},"SALADIX":{"compradores":70,"vendido":7543033,"cobertura_pct":0.3226},"TORTUGUITA":{"compradores":125,"vendido":63953559,"cobertura_pct":0.576}},"04-Abril":{"MOGUL":{"compradores":45,"vendido":2100570,"cobertura_pct":0.2074},"MENTHO PLUS":{"compradores":5,"vendido":155700,"cobertura_pct":0.023},"ROCKLETS":{"compradores":54,"vendido":3008977,"cobertura_pct":0.2488},"SALADIX":{"compradores":53,"vendido":4164571,"cobertura_pct":0.2442},"TORTUGUITA":{"compradores":85,"vendido":12349113,"cobertura_pct":0.3917}}}},"Claudia Narvaes Morel":{"total_clientes_ruta":170,"clientes_ruta":[{"codigo":"10784","nombre":"Armanda de Martinez","barrio":"Desconocido","dias":"Miercoles"},{"codigo":"9955","nombre":"Maria Obudia De Silva Davalos","barrio":"Sanja Pyta","dias":"Lunes"},{"codigo":"10340","nombre":"Carlos Insauralde","barrio":"Sanja Pyta","dias":"Lunes"},{"codigo":"9972","nombre":"ORTIZ VERA, OSCAR EDEN","barrio":"Sanja Pyta","dias":"Lunes"},{"codigo":"8259","nombre":"AUTOSERVV STOP BEER","barrio":"General Diaz","dias":"Viernes"},{"codigo":"8073","nombre":"COMERCIAL JUAN AMARILLA","barrio":"General Diaz","dias":"Viernes"},{"codigo":"8230","nombre":"Fernando Ramirez","barrio":"General Diaz","dias":"Viernes"},{"codigo":"8246","nombre":"Heller Divino Mareco","barrio":"General Diaz","dias":"Viernes"},{"codigo":"10437","nombre":"Gladys Elizabeth Sanchez Diaz","barrio":"General Diaz","dias":"Viernes"},{"codigo":"8178","nombre":"STELLA MARI BAZAN ESCOBAR","barrio":"General Diaz","dias":"Viernes"},{"codigo":"10900","nombre":"Natalia Isabel Arguello","barrio":"General Diaz","dias":"Viernes"},{"codigo":"9099","nombre":"SAN ANTONIO CONVENIENCIAS","barrio":"General Diaz","dias":"Viernes"},{"codigo":"8254","nombre":"DESPENSA MARIELA","barrio":"General Diaz","dias":"Viernes"},{"codigo":"10386","nombre":"MARTINEZ DE ARCE, ANTONIA","barrio":"General Genes","dias":"Lunes"},{"codigo":"9411","nombre":"CARNICERIA SANTIAGO 2","barrio":"General Genes","dias":"Lunes"},{"codigo":"8338","nombre":"DUDU COMERCIAL","barrio":"General Genes","dias":"Lunes"},{"codigo":"8140","nombre":"MACIEL","barrio":"General Genes","dias":"Lunes"},{"codigo":"11223","nombre":"KAREN 24HS","barrio":"General Genes","dias":"Lunes"},{"codigo":"8477","nombre":"DESPENSA R G","barrio":"General Genes","dias":"Martes"},{"codigo":"9205","nombre":"DESPENSA D Y D","barrio":"General Genes","dias":"Martes"},{"codigo":"11306","nombre":"Marcos Benitez Santacruz","barrio":"General Genes","dias":"Martes"},{"codigo":"9499","nombre":"Veronica Grance Gonzalez","barrio":"General Genes","dias":"Lunes"},{"codigo":"10474","nombre":"DESPENSA AJ DE MARIA AGUSTINA SOTO","barrio":"General Genes","dias":"Martes"},{"codigo":"10147","nombre":"DESPENSA CRISTHIAN","barrio":"General Genes","dias":"Lunes"},{"codigo":"10114","nombre":"DESPENSA 2 HERMANOS","barrio":"General Genes","dias":"Lunes"},{"codigo":"8288","nombre":"Isaias Aristides Ortega","barrio":"General Genes","dias":"Martes"},{"codigo":"8055","nombre":"DESPENSA MICAELA","barrio":"General Genes","dias":"Martes"},{"codigo":"8958","nombre":"Fania Palacios","barrio":"General Genes","dias":"Martes"},{"codigo":"11015","nombre":"Ariel Galeano Gonzalez","barrio":"General Genes","dias":"Miercoles"},{"codigo":"10961","nombre":"BENITEZ DIAZ, EDER NILO","barrio":"General Genes","dias":"Miercoles"},{"codigo":"3002","nombre":"DESPENSA AMANECER","barrio":"General Genes","dias":"Miercoles"},{"codigo":"3305","nombre":"Mirian Faviola Mancuello","barrio":"General Genes","dias":"Miercoles"},{"codigo":"8638","nombre":"Elizabeth Duarte Duarte","barrio":"General Genes","dias":"Miercoles"},{"codigo":"3340","nombre":"MINI MARKET ELIAS","barrio":"General Genes","dias":"Martes"},{"codigo":"8125","nombre":"KO E PYAHU","barrio":"General Genes","dias":"Lunes"},{"codigo":"11103","nombre":"Fatima Bizzu Quiñonez","barrio":"General Genes","dias":"Martes"},{"codigo":"8716","nombre":"SILVIA FERREIRA","barrio":"General Genes","dias":"Martes"},{"codigo":"10142","nombre":"Ferreira Coronel","barrio":"General Genes","dias":"Martes"},{"codigo":"10285","nombre":"Claudia Rosalba Mendoza","barrio":"General Genes","dias":"Martes"},{"codigo":"9347","nombre":"DESPENSA EMILY","barrio":"General Genes","dias":"Martes"},{"codigo":"8414","nombre":"DESPENSA VICTORIA","barrio":"General Genes","dias":"Martes"},{"codigo":"8069","nombre":"EDU","barrio":"General Genes","dias":"Miercoles"},{"codigo":"10726","nombre":"Nicanora Florentino","barrio":"General Genes","dias":"Lunes"},{"codigo":"10398","nombre":"Celia Barrios","barrio":"General Genes","dias":"Lunes"},{"codigo":"10459","nombre":"DESPENSA MILI PAN","barrio":"General Genes","dias":"Lunes"},{"codigo":"10253","nombre":"Julio Basualdo","barrio":"General Genes","dias":"Lunes"},{"codigo":"11400","nombre":"BENITEZ CUETO, MIRTHA ISABEL","barrio":"General Genes","dias":"Lunes"},{"codigo":"8035","nombre":"ALMACEN SAN FRANCISCO","barrio":"General Genes","dias":"Lunes"},{"codigo":"11273","nombre":"Marco Benitez Santacruz","barrio":"General Genes","dias":"Martes"},{"codigo":"10850","nombre":"Balvina Martinez","barrio":"General Genes","dias":"Martes"},{"codigo":"9840","nombre":"CUBAS CANDIA, LEONARDO","barrio":"General Genes","dias":"Lunes"},{"codigo":"10205","nombre":"Mirna Graciela Godoy Medina","barrio":"General Genes","dias":"Lunes"},{"codigo":"8264","nombre":"DESPENSA EL CICLON","barrio":"General Genes","dias":"Martes"},{"codigo":"9379","nombre":"DESPENSA SAN CAYETANO","barrio":"General Genes","dias":"Lunes"},{"codigo":"8752","nombre":"Y A R BEER","barrio":"General Genes","dias":"Lunes"},{"codigo":"8864","nombre":"W R DESPENSA","barrio":"General Genes","dias":"Lunes"},{"codigo":"8112","nombre":"DESPENSA POLAR GENERAL","barrio":"General Genes","dias":"Martes"},{"codigo":"10220","nombre":"Virginio Benitaz","barrio":"General Genes","dias":"Martes"},{"codigo":"11183","nombre":"Isaias Emmanuel Sanabria Yua","barrio":"General Genes","dias":"Miercoles"},{"codigo":"9429","nombre":"Fablo Chavez","barrio":"General Genes","dias":"Lunes"},{"codigo":"10063","nombre":"Despensa L M","barrio":"General Genes","dias":"Lunes"},{"codigo":"10143","nombre":"DESPENSA O D","barrio":"General Genes","dias":"Miercoles"},{"codigo":"8213","nombre":"DESPENSA ALEXANDER","barrio":"General Genes","dias":"Miercoles"},{"codigo":"9313","nombre":"DESPENSA MAURO","barrio":"General Genes","dias":"Lunes"},{"codigo":"9204","nombre":"ALFA Y OMEGA BAZAR DE MARTINEZ GIMENEZ","barrio":"General Genes","dias":"Lunes"},{"codigo":"11304","nombre":"Fabiana ramirez","barrio":"General Genes","dias":"Lunes"},{"codigo":"11292","nombre":"Bernarda Paez","barrio":"General Genes","dias":"Miercoles"},{"codigo":"10251","nombre":"Elva Ester Fretes Ramirez","barrio":"General Genes","dias":"Martes"},{"codigo":"9166","nombre":"DESPENSA KITI","barrio":"General Genes","dias":"Martes"},{"codigo":"9313","nombre":"DESPENSA CRISTIAN","barrio":"General Genes","dias":"Martes"},{"codigo":"9144","nombre":"Geronima Lopez","barrio":"General Genes","dias":"Martes"},{"codigo":"10064","nombre":"Faustina Benitez","barrio":"General Genes","dias":"Martes"},{"codigo":"8095","nombre":"DON BOSCO","barrio":"General Genes","dias":"Lunes"},{"codigo":"10155","nombre":"Despensa Lidia","barrio":"General Genes","dias":"Lunes"},{"codigo":"10656","nombre":"Ever Mancuello","barrio":"General Genes","dias":"Lunes"},{"codigo":"11002","nombre":"DESP. SAN LUIS","barrio":"General Genes","dias":"Miercoles"},{"codigo":"10907","nombre":"Justina Cubilia","barrio":"General Genes","dias":"Miercoles"},{"codigo":"9348","nombre":"ABEL CONVENIENCIAS","barrio":"General Genes","dias":"Martes"},{"codigo":"10840","nombre":"Porfiria Cristaldo","barrio":"General Genes","dias":"Martes"},{"codigo":"11402","nombre":"Otilia Cardoso","barrio":"General Genes","dias":"Martes"},{"codigo":"11228","nombre":"Felipa Jara","barrio":"General Genes","dias":"Lunes"},{"codigo":"9909","nombre":"Wilson Quiñonoz","barrio":"General Genes","dias":"Lunes"},{"codigo":"11023","nombre":"Pablo Joni Ruiz Rodriguez","barrio":"General Genes","dias":"Martes"},{"codigo":"10539","nombre":"Maria Herrera","barrio":"General Genes","dias":"Martes"},{"codigo":"10381","nombre":"Flavia Domitila Zalazar Aguilera","barrio":"General Genes","dias":"Lunes"},{"codigo":"10512","nombre":"Carlos Romero","barrio":"General Genes","dias":"Martes"},{"codigo":"10082","nombre":"DESPENSA SAN LUIS","barrio":"General Genes","dias":"Miercoles"},{"codigo":"10083","nombre":"DESPENSA MIRIAN","barrio":"General Genes","dias":"Miercoles"},{"codigo":"9703","nombre":"MALDONADO, BALTAZAR","barrio":"General Genes","dias":"Miercoles"},{"codigo":"10706","nombre":"Roberto Antonio Ortiz","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8600","nombre":"DESPENSA KAREN","barrio":"Maria Victoria","dias":"Viernes"},{"codigo":"10983","nombre":"Liz Natalia Areco","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8785","nombre":"DESPENSA NINA","barrio":"Obrero 2","dias":"Miercoles"},{"codigo":"9824","nombre":"Antonia Cabrera","barrio":"San Antonio","dias":"Miercoles"},{"codigo":"9635","nombre":"Fabio Vasquez Sanchez","barrio":"San Antonio","dias":"Miercoles"},{"codigo":"8590","nombre":"DESPENSA DOMINGUEZ","barrio":"San Blas","dias":"Viernes"},{"codigo":"8053","nombre":"Della Rumilda Benitez","barrio":"San Blas","dias":"Viernes"},{"codigo":"8203","nombre":"TUPI COMERCIAL","barrio":"San Blas","dias":"Viernes"},{"codigo":"9809","nombre":"Cesar Antunez","barrio":"San Blas","dias":"Viernes"},{"codigo":"9045","nombre":"SAN RAFAEL","barrio":"San Blas","dias":"Viernes"},{"codigo":"9706","nombre":"DESPENSA SAN BLAS","barrio":"San Blas","dias":"Viernes"},{"codigo":"11030","nombre":"LARREA BAEZ, WILMA SONIA","barrio":"San Blas","dias":"Viernes"},{"codigo":"8499","nombre":"COMERCIAL AMAMBAY","barrio":"San Blas","dias":"Viernes"},{"codigo":"11188","nombre":"Despensa Luis","barrio":"San Blas","dias":"Viernes"},{"codigo":"11055","nombre":"Ana Paula Araujo Noguera","barrio":"San Blas","dias":"Viernes"},{"codigo":"8721","nombre":"COPETIN E MARI","barrio":"San Blas","dias":"Viernes"},{"codigo":"8406","nombre":"LUCIDAIVA LIZ LARREA ESTIGARRIBIA","barrio":"San Blas","dias":"Viernes"},{"codigo":"8238","nombre":"DESPENSA NORMA","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8359","nombre":"PANIFICADORA SANTA ROSA","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8183","nombre":"CASA PABLO","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"1257","nombre":"COMERCIAL LOS ANGELES DE MIRIAN ESTELA S","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"11375","nombre":"Jbr333eas","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8344","nombre":"COMERCIAL SAN ANDRES","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"10613","nombre":"Jose Alberto Quiñiz Ruiz","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"11389","nombre":"Hugo Samuel Maciel Ramirez","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8820","nombre":"MUNDO BEER","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8423","nombre":"ANITA BEER","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"10569","nombre":"Liliana Mendoza Avalos","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"11029","nombre":"Sandra Elizabeth Dominguez de Bogado","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8126","nombre":"LA ESMERALDA RODEO","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"10901","nombre":"Mercedes Ferreira","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8389","nombre":"DESPENSA ALEXIS","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8358","nombre":"DESPENSA VENUS","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"11215","nombre":"ER CONVENENCIAS DE MONTIEL, DOMINGO","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"10749","nombre":"Conversar A M","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8049","nombre":"BABY","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8448","nombre":"DESPENSA FABIO","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"9673","nombre":"Brigida Gomez","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8058","nombre":"DESPENSA RENE","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"10342","nombre":"NANCY VUCES","barrio":"San Gerardo","dias":"Jueves"},{"codigo":"8853","nombre":"TODO HARINA E.A.S","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"9295","nombre":"Sandra Patricia Cano","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"687","nombre":"Samuel Diaz Diaz","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"3289","nombre":"DESPENSA TOMIE DE OKEMOTO, MARIA KITA","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"8263","nombre":"LA PALOMA","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"9294","nombre":"COMERCIAL ESPINOLA","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"8747","nombre":"CYBER CLICK","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"9227","nombre":"MAXIMA ANTONIA CANTERO RIOS","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"8841","nombre":"JL CONVENIENCIA","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"9645","nombre":"Wilma Ramona Bogarin Benitez","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"10235","nombre":"DESPENSA MIRIAN","barrio":"San Gerardo 2","dias":"Jueves"},{"codigo":"8099","nombre":"DESPENSA LAURA","barrio":"San Juan Neuman","dias":"Miercoles"},{"codigo":"11407","nombre":"Afortiori Emprendimiento SA","barrio":"San Juan Neuman","dias":"Miercoles"},{"codigo":"11118","nombre":"Maria Gladys Gonzalez","barrio":"San Juan Neuman","dias":"Miercoles"},{"codigo":"10682","nombre":"GRACIA DE MARTE, ADELINO RUBEN","barrio":"San Juan Neuman","dias":"Miercoles"},{"codigo":"11194","nombre":"J L 24HS","barrio":"San Juan Neuman","dias":"Miercoles"},{"codigo":"8730","nombre":"DESPENSA OSCAR","barrio":"San Juan Neuman","dias":"Miercoles"},{"codigo":"10429","nombre":"KAVASOKO, SERGIO","barrio":"Sanya Pyta","dias":"Sabado"},{"codigo":"10055","nombre":"Liz Jacqueline Jacquel Ruiz","barrio":"Sanya Pyta","dias":"Sabado"},{"codigo":"10054","nombre":"Denilson Alves de oliveira","barrio":"Sanya Pyta","dias":"Sabado"},{"codigo":"10631","nombre":"Angel Ocampos","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8553","nombre":"COMERCIAL LA PARAGUAYITA","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"10118","nombre":"Teresa Fernandes","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8063","nombre":"PANADERIA OLIVEIRA","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"1276","nombre":"MAS O MENOS RESTAURANTE, DE CANO, JUAN R","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8539","nombre":"DESPENSA GAYOSO 2","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"6198","nombre":"TOPACIO","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8562","nombre":"DESPENSA JULIA","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8733","nombre":"Maria Rumilda Rojas","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"9335","nombre":"Juan martinez","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8979","nombre":"Juana Ortiz de martinez","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8478","nombre":"Nicolas Paradeda","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8982","nombre":"COMERCIAL PUNTO UNO BEER","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8061","nombre":"CARLITOS","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"11285","nombre":"Cristobal Lopez Benitez","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8135","nombre":"LOREN","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"8204","nombre":"UNICOMPRA","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"10810","nombre":"Aimi Rosana Paredes","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"9371","nombre":"Miguela Gomez","barrio":"Virgen de Caacupe","dias":"Sabado"},{"codigo":"5489","nombre":"CONVENIENCIA SSC","barrio":"Virgen de Caacupe","dias":"Sabado"}],"lines":{"MOGUL":{"compradores":["Angel Ocampos","BENITEZ CUETO, MIRTHA ISABEL","CARNICERIA SANTIAGO 2","CASA PABLO","COMERCIAL PUNTO UNO BEER","Cristhan Javier Ayala Benitez","CUBAS CANDIA, LEONARDO","Delia Rumilda Benitez","DESPENSA 2 HERMANOS","DESPENSA CRISTHIAN","DESPENSA D Y D","DESPENSA DOMINGUEZ","DESPENSA EMILY","DESPENSA MICAELA","DESPENSA NINA","DESPENSA R.G","DESPENSA VENUS","DESPENSA VICTORIA","DESPENSA YURI","DUDU COMERCIAL","Elizabeth Duarte Duarte","Fania Palacios","Gladys Elizabeth Sanchez Diaz","Julio Basualdo","MACIEL","Maria Gladys Gonzalez","Mercedes Ferreira","Mirian Faviola Mancuello","Mirna Graciela Godoy Medina","PANADERIA OLIVEIRA","Sandra Patricia Cano","Veronica Grance Gonzalez"],"total_compradores":32,"total_vendido":1887777,"meta_pct":0.8,"cobertura_pct":0.1882},"MENTHO PLUS":{"compradores":["BENITEZ CUETO, MIRTHA ISABEL","CARNICERIA SANTIAGO 2","CUBAS CANDIA, LEONARDO","DESPENSA ALEXANDER","DESPENSA NINA","DESPENSA YURI","LA ESMERALDA RODEO","MARTINEZ DE ARCE, ANTONIA","Natalia Isabel Arguello","Rumilda Noelia  Ferrería Coronel","SAN RAFAEL"],"total_compradores":11,"total_vendido":262178,"meta_pct":0.6,"cobertura_pct":0.0647},"ROCKLETS":{"compradores":["Benita Jara","CARNICERIA SANTIAGO 2","Claudia Rosalba Mendoza","COMERCIAL ESPINOLA","COMERCIAL LOS ANGELES DE MIRIAN ESTELA S","COMERCIAL PUNTO UNO BEER","Cristhan Javier Ayala Benitez","Delia Rumilda Benitez","DESPENSA 2 HERMANOS","DESPENSA AMANECER","DESPENSA CRISTIAN","DESPENSA D Y D","DESPENSA DOMINGUEZ","DESPENSA EMILY","DESPENSA GAYOSO 2","DESPENSA MARIO","DESPENSA MICAELA","DESPENSA MIRIAN","DESPENSA R.G","DESPENSA SAN CAYETANO","DESPENSA VICTORIA","DESPENSA YURI","Elizabeth Duarte Duarte","Fania Palacios","Isaias Aristides Ortega","LA PALOMA","LAUDELINA GARCIA JARA","LUCIDAIVA LIZ LARREA ESTIGARRIBIA","MACIEL","Maria Gladys Gonzalez","Mirna Graciela Godoy Medina","N.M DESPENSA","Nicanora Florentino","ÑA RUBIA","PANADERIA OLIVEIRA","Ronald Nara","SAN RAFAEL","Veronica Grance Gonzalez","W.R DESPENSA","Wilma Ramona Bogarin Benitez"],"total_compradores":40,"total_vendido":1971800,"meta_pct":0.8,"cobertura_pct":0.2353},"SALADIX":{"compradores":["BENITEZ DIAZ, EDER NILO","CARNICERIA SANTIAGO 2","CASA PABLO","COMERCIAL ESPINOLA","COMERCIAL PUNTO UNO BEER","Cristhan Javier Ayala Benitez","CUBAS CANDIA, LEONARDO","DESPENSA 2 HERMANOS","DESPENSA CRISTHIAN","DESPENSA CRISTIAN","DESPENSA D Y D","DESPENSA DOMINGUEZ","Despensa L.M.","DESPENSA MICAELA","DESPENSA MILI PAN","DESPENSA YURI","DUDU COMERCIAL","Elizabeth Duarte Duarte","Flavia Domitila Zalazar Aguilera","Gladys Elizabeth Sanchez Diaz","Julio Basualdo","Julio Cesar Figueredo","KAREN 24HS","KO E PYAHU","LA ESMERALDA RODEO","MACIEL","Maria Gladys Gonzalez","Nicolás Paradeda","PANADERIA OLIVEIRA","SAN RAFAEL","Veronica Grance Gonzalez"],"total_compradores":31,"total_vendido":2249285,"meta_pct":0.8,"cobertura_pct":0.1824},"TORTUGUITA":{"compradores":["A.R BEER","ABEL CONVENIENCIAS","ALMACEN SAN FRANCISCO","Blas Vicente Maidana","CARNICERIA SANTIAGO 2","COMERCIAL ESPINOLA","COMERCIAL LOS ANGELES DE MIRIAN ESTELA S","COMERCIAL PUNTO UNO BEER","COPETIN Ё MARI","Cristhan Javier Ayala Benitez","CUBAS CANDIA, LEONARDO","DESP. SAN LUIS","DESPENSA AJ DE MARIA AGUSTINA SOTO","DESPENSA ALEXANDER","DESPENSA CRISTHIAN","DESPENSA CRISTIAN","DESPENSA DOMINGUEZ","DESPENSA FABIO","DESPENSA GAYOSO 2","DESPENSA KITI","DESPENSA LAURA","Despensa Lidia","DESPENSA MARIO","DESPENSA MAURO","DESPENSA O.D","DESPENSA SAN CAYETANO","Elizabeth Duarte Duarte","fabiana ramirez","Fania Palacios","Felipa Jara","Gladys Elizabeth Sanchez Diaz","Isaias Aristides Ortega","Juan martinez","Juana Ortiz de martinez","Julio Basualdo","Julio Cesar Figueredo","KAREN 24HS","LAUDELINA GARCIA JARA","Marcos Benitez Santacruz","MERCADO SUGAI","Mercedes Ferreira","MINI MARKET ELIAS","Mirian Faviola Mancuello","Mirna Graciela Godoy Medina","Nicanora Florentino","Nicolás Paradeda","ÑA RUBIA","Ronald Nara","Rumilda Noelia  Ferrería Coronel","Samuel Diaz Diaz","SAN RAFAEL","Sandra Patricia Cano","SILVIA FERREIRA","STELLA MARI BAZAN ESCOBAR","Veronica Grance Gonzalez","W.R DESPENSA","Wilma Ramona Bogarin Benitez"],"total_compradores":57,"total_vendido":6590995,"meta_pct":0.9,"cobertura_pct":0.3353}},"historico":{"01-Enero":{"MOGUL":{"compradores":43,"vendido":2870728,"cobertura_pct":0.2529},"MENTHO PLUS":{"compradores":19,"vendido":680194,"cobertura_pct":0.1118},"ROCKLETS":{"compradores":62,"vendido":3692291,"cobertura_pct":0.3647},"SALADIX":{"compradores":69,"vendido":4526468,"cobertura_pct":0.4059},"TORTUGUITA":{"compradores":101,"vendido":37533523,"cobertura_pct":0.5941}},"02-Febrero":{"MOGUL":{"compradores":48,"vendido":4576146,"cobertura_pct":0.2824},"MENTHO PLUS":{"compradores":5,"vendido":171270,"cobertura_pct":0.0294},"ROCKLETS":{"compradores":50,"vendido":3761101,"cobertura_pct":0.2941},"SALADIX":{"compradores":52,"vendido":2945126,"cobertura_pct":0.3059},"TORTUGUITA":{"compradores":83,"vendido":23808754,"cobertura_pct":0.4882}},"03-Marzo":{"MOGUL":{"compradores":52,"vendido":5768088,"cobertura_pct":0.3059},"MENTHO PLUS":{"compradores":6,"vendido":134709,"cobertura_pct":0.0353},"ROCKLETS":{"compradores":52,"vendido":4414956,"cobertura_pct":0.3059},"SALADIX":{"compradores":43,"vendido":4129646,"cobertura_pct":0.2529},"TORTUGUITA":{"compradores":86,"vendido":33585273,"cobertura_pct":0.5059}},"04-Abril":{"MOGUL":{"compradores":32,"vendido":1887777,"cobertura_pct":0.1882},"MENTHO PLUS":{"compradores":11,"vendido":262178,"cobertura_pct":0.0647},"ROCKLETS":{"compradores":40,"vendido":1971800,"cobertura_pct":0.2353},"SALADIX":{"compradores":31,"vendido":2249285,"cobertura_pct":0.1824},"TORTUGUITA":{"compradores":57,"vendido":6590995,"cobertura_pct":0.3353}}}},"Olga Elizabeth Molinas Martins":{"total_clientes_ruta":57,"clientes_ruta":[{"codigo":"1337","nombre":"CONVENCION ALCE E A","barrio":"Chiriguanos Canderos","dias":"TODOS LOS DIAS"},{"codigo":"1394","nombre":"BALDONE E A","barrio":"Chiriguanos Canderos","dias":"TODOS LOS DIAS"},{"codigo":"1394","nombre":"Dom Pedro Blanca s Ramirez","barrio":"Chiriguanos Canderos","dias":"TODOS LOS DIAS"},{"codigo":"1396","nombre":"GRUPO SANTOS SANTA TERESA E A S","barrio":"Chiriguanos Canderos","dias":"TODOS LOS DIAS"},{"codigo":"1396","nombre":"DISTRIBUIDORA DE COMBUSTIBLE CAMILLE B.R","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1395","nombre":"PRIMERA ESTACION DE SERVICIO SRL","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1394","nombre":"BALDONE E A","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1393","nombre":"BALDONE S A","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1392","nombre":"MERCADO SUCA","barrio":"General Diaz","dias":"TODOS LOS DIAS"},{"codigo":"1391","nombre":"DISTRIBUIDORA DE COMBUSTIBLE CAMILLE B.S.E","barrio":"General Diaz","dias":"TODOS LOS DIAS"},{"codigo":"1390","nombre":"Renovaldo Ferreira Benitez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1389","nombre":"JORGE FERNANDEZ DENIS","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11421","nombre":"EMPRENDIMIENTO SAR JORGE EAS","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11414","nombre":"EMPRENDIMIENTO SAR JORGE EAS","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11106","nombre":"EMPRENDIMIENTO SAR JORGE EAS","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1180","nombre":"PEDRO ETACION DE SERVICIO BRL","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1181","nombre":"AREA HOLDING DE COMPRA SOCIEDAD ANONIMA BRL","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1182","nombre":"DISTRIBUIDORA COMBUSTIBLE CAMILLE B.S.E","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1187","nombre":"BALDONE S A","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1158","nombre":"Grupo Olga Blanca Ferrer De Siva Ferrer","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1153","nombre":"Paul Chacer REPRESENTACIONES SOCIEDAD ANO","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1147","nombre":"Area Holding DR","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1273","nombre":"BAQUE CHACO REPRESENTACIONES SOCIEDAD ANO","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1123","nombre":"DISTRIBUIDORA COMBUSTIBLE CAMILLE B.S","barrio":"General Diaz","dias":"TODOS LOS DIAS"},{"codigo":"1122","nombre":"DISTRIBUIDORA COMBUSTIBLE CAMILLE B.S","barrio":"General Diaz","dias":"TODOS LOS DIAS"},{"codigo":"1121","nombre":"DISTRIBUIDORA COMBUSTIBLE CAMILLE B.S","barrio":"General Diaz","dias":"TODOS LOS DIAS"},{"codigo":"1204","nombre":"VITAL FARMACIA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11124","nombre":"DESPENSA AGACHITO","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8122","nombre":"3BY AGUARA SRL","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8115","nombre":"BAQERIA MINERBA JUAN MASTER","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11811","nombre":"EMPRENDIMIENTO DE LA DE CAMILLE B.R L","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"1823","nombre":"PRIMERA ESTACION DE SERVICIO S.R.L","barrio":"Maria Victoria","dias":"TODOS LOS DIAS"},{"codigo":"1824","nombre":"GRUPO SHEREADS S RL","barrio":"Maria Victoria","dias":"TODOS LOS DIAS"},{"codigo":"1815","nombre":"PRIMERA ESTACION DE SERVICIO S.R.L","barrio":"Maria Victoria","dias":"TODOS LOS DIAS"},{"codigo":"10651","nombre":"DISTRIBUIDORA DE COMBUSTIBLE CAMILLE S A","barrio":"Obrero","dias":"TODOS LOS DIAS"},{"codigo":"10461","nombre":"DISTRIBUIDORA DE COMBUSTIBLE CAMILLE S A","barrio":"Obrero","dias":"TODOS LOS DIAS"},{"codigo":"1745","nombre":"Fabule Graciela GONZALEZ AYALA","barrio":"Obrero","dias":"TODOS LOS DIAS"},{"codigo":"9610","nombre":"SEMBA S A","barrio":"Perpetuo Socorro","dias":"TODOS LOS DIAS"},{"codigo":"8138","nombre":"PANIFICADORA DE SOCIEDAD ANONIMA","barrio":"Perpetuo Socorro","dias":"TODOS LOS DIAS"},{"codigo":"8146","nombre":"BALDONE S A","barrio":"Perpetuo Socorro","dias":"TODOS LOS DIAS"},{"codigo":"8163","nombre":"BAQUE CHACO D LUZ S A","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"9471","nombre":"JORGE TORBE A","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"9534","nombre":"AUTOSERVICIO JORGE","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"9835","nombre":"MERCADO LUZ S A","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"9847","nombre":"FORTALEZA 2","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"1322","nombre":"MFA","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"9474","nombre":"ANTORIOS D.L.B","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"9611","nombre":"MKG S A A","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"8133","nombre":"Ladmier NG Gonzalez","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"8194","nombre":"DESPENSA Y CARNICERIA KAREN","barrio":"San Blus","dias":"TODOS LOS DIAS"},{"codigo":"11273","nombre":"PRIMERA ESTACION","barrio":"San Blus","dias":"TODOS LOS DIAS"},{"codigo":"1305","nombre":"GUARANI PARAGUAY E A","barrio":"San Blus","dias":"TODOS LOS DIAS"},{"codigo":"1304","nombre":"PRIMERA ESTACION","barrio":"San Blus","dias":"TODOS LOS DIAS"},{"codigo":"1191","nombre":"AJA 24HORAS","barrio":"Terraza","dias":"TODOS LOS DIAS"},{"codigo":"9430","nombre":"DESPENSA SANVITARINO","barrio":"Terraza","dias":"TODOS LOS DIAS"},{"codigo":"8266","nombre":"COMERCIAL ALICE","barrio":"Bernardino Caballero","dias":"MARTES"},{"codigo":"11377","nombre":"COMERCIAL ALICE CAFETERIA","barrio":"Bernardino Caballero","dias":"Martes"}],"lines":{"MOGUL":{"compradores":["3SV AGUARAY S.R.L","A.M 24HORAS","ARASHI S.A.","BALDONE S.A.","BAREIRO MINELLA, JUAN NACER","Carlos Severo Cardozo Villalba","CASA CHACO REPRESENTACIONES SOCIEDAD ANO","DESPENSA D.L.B","DISTRIBUIDORA DE COMBUSTIBLE CAMILLE S.R","Elena Rocio Sanabria Machado","EMPRENDIMIENTOS SAN JORGE E.A.S.","FRONTERA DISTR. DE COMBUSTIBLE S.A.","Iris Krauspenhar","Jorge Fernando Denis","Petropar","PRIMERA ESTACIÓN DE SERVICIOS SRL","SEMMA S.A"],"total_compradores":17,"total_vendido":1632558,"meta_pct":0.8,"cobertura_pct":0.2982},"MENTHO PLUS":{"compradores":["ARASHI S.A.","BALDONE S.A.","Carlos Severo Cardozo Villalba","DISTRIBUIDORA DE COMBUSTIBLE CAMILLE S.R","Elena Rocio Sanabria Machado","EMPRENDIMIENTOS SAN JORGE E.A.S.","Iris Krauspenhar","Jorge Fernando Denis","MERELES Y ASOCIADOS SOCIEDAD ANONIMA","PRIMERA ESTACIÓN DE SERVICIOS SRL","SEMMA S.A"],"total_compradores":11,"total_vendido":1400940,"meta_pct":0.6,"cobertura_pct":0.193},"ROCKLETS":{"compradores":["A.M 24HORAS","ARASHI S.A.","BALDONE S.A.","BAREIRO MINELLA, JUAN NACER","CASA AYAKO","CASA CHACO REPRESENTACIONES SOCIEDAD ANO","DISTRIBUIDORA DE COMBUSTIBLE CAMILLE S.R","EMPRENDIMIENTOS SAN JORGE E.A.S.","Iris Krauspenhar","Paulo César Da Silva Ferreira","PRIMERA ESTACION"],"total_compradores":11,"total_vendido":1852019,"meta_pct":0.8,"cobertura_pct":0.193},"SALADIX":{"compradores":["ARASHI S.A.","BALDONE S.A.","Carlos Severo Cardozo Villalba","COMERCIAL ALICE S.A.","Conveniencia Dos Hermanas","DISTRIBUIDORA DE COMBUSTIBLE CAMILLE S.R","Elena Rocio Sanabria Machado","EMPRENDIMIENTOS SAN JORGE E.A.S.","FRONTERA DISTR. DE COMBUSTIBLE S.A.","MERELES Y ASOCIADOS SOCIEDAD ANONIMA","Paulo César Da Silva Ferreira","Petropar","VLX S.A"],"total_compradores":13,"total_vendido":2422615,"meta_pct":0.8,"cobertura_pct":0.2281},"TORTUGUITA":{"compradores":["3SV AGUARAY S.R.L","A.M 24HORAS","ANTOJOS","ARASHI S.A.","BALDONE S.A.","Carlos Severo Cardozo Villalba","CASA AYAKO","Conveniencia Dos Hermanas","DESPENSA D.L.B","DISTRIBUIDORA DE COMBUSTIBLE CAMILLE S.R","Elena Rocio Sanabria Machado","EMPRENDIMIENTOS SAN JORGE E.A.S.","FRONTERA DISTR. DE COMBUSTIBLE S.A.","Ladislao  Niz  Gonzalez","MERCADO LUZ S.A","MERELES Y ASOCIADOS SOCIEDAD ANONIMA","Paulo César Da Silva Ferreira","Petropar","PRIMERA ESTACION","PRIMERA ESTACION DE SERVICIO S.R.L","PRIMERA ESTACIÓN DE SERVICIOS SRL","SEMMA S.A"],"total_compradores":22,"total_vendido":3295025,"meta_pct":0.9,"cobertura_pct":0.386}},"historico":{"01-Enero":{"MOGUL":{"compradores":29,"vendido":5030148,"cobertura_pct":0.5088},"MENTHO PLUS":{"compradores":20,"vendido":4172541,"cobertura_pct":0.3509},"ROCKLETS":{"compradores":31,"vendido":13605634,"cobertura_pct":0.5439},"SALADIX":{"compradores":39,"vendido":10178777,"cobertura_pct":0.6842},"TORTUGUITA":{"compradores":43,"vendido":93808985,"cobertura_pct":0.7544}},"02-Febrero":{"MOGUL":{"compradores":28,"vendido":7485426,"cobertura_pct":0.4912},"MENTHO PLUS":{"compradores":16,"vendido":1562693,"cobertura_pct":0.2807},"ROCKLETS":{"compradores":26,"vendido":6866469,"cobertura_pct":0.4561},"SALADIX":{"compradores":31,"vendido":6727432,"cobertura_pct":0.5439},"TORTUGUITA":{"compradores":43,"vendido":46645254,"cobertura_pct":0.7544}},"03-Marzo":{"MOGUL":{"compradores":33,"vendido":9847890,"cobertura_pct":0.5789},"MENTHO PLUS":{"compradores":25,"vendido":4399200,"cobertura_pct":0.4386},"ROCKLETS":{"compradores":37,"vendido":18409975,"cobertura_pct":0.6491},"SALADIX":{"compradores":38,"vendido":15567881,"cobertura_pct":0.6667},"TORTUGUITA":{"compradores":48,"vendido":58059440,"cobertura_pct":0.8421}},"04-Abril":{"MOGUL":{"compradores":21,"vendido":1632558,"cobertura_pct":0.3684},"MENTHO PLUS":{"compradores":14,"vendido":1400940,"cobertura_pct":0.2456},"ROCKLETS":{"compradores":18,"vendido":1852019,"cobertura_pct":0.3158},"SALADIX":{"compradores":18,"vendido":2422615,"cobertura_pct":0.3158},"TORTUGUITA":{"compradores":31,"vendido":3295025,"cobertura_pct":0.5439}}}},"Lourdes Raquel Torales Peralta":{"total_clientes_ruta":197,"clientes_ruta":[{"codigo":"8749","nombre":"Elinela Cristina Da Silva Araujo Florentin","barrio":"Bernardino Caballero","dias":"Jueves"},{"codigo":"8087","nombre":"YOSKE KAWASOKO TAKESHITA","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"9138","nombre":"Comercial Maria Isabel","barrio":"Bernardino Caballero","dias":"Jueves"},{"codigo":"8311","nombre":"COMERCIAL SANTA ROSA","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"8111","nombre":"GL COMUNICACIONES 1","barrio":"Bernardino Caballero","dias":"Jueves"},{"codigo":"8118","nombre":"HARAMOTO","barrio":"Bernardino Caballero","dias":"Jueves"},{"codigo":"10074","nombre":"DESPENSA RYANCITO","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"9309","nombre":"DESPENSA FORTALEZA","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"10408","nombre":"JUANA PEDRA","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"10437","nombre":"Zoraida Retamora de Gonzales","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"9922","nombre":"Miguel Algel Maldana Cantaluppi","barrio":"Bernardino Caballero","dias":"Jueves"},{"codigo":"10679","nombre":"Eusebio Ramon Barreto Escobar","barrio":"Bernardino Caballero","dias":"Jueves"},{"codigo":"11124","nombre":"COMERCIAL CAMI","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"8220","nombre":"Carlos Ruben Valdez","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"10210","nombre":"BENITEZ BEER","barrio":"Bernardino Caballero","dias":"Jueves"},{"codigo":"9351","nombre":"Cristina Silva","barrio":"Bernardino Caballero","dias":"Lunes"},{"codigo":"8083","nombre":"Mario Paredes Quintana","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"8103","nombre":"Edgar Rodriguez","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"11115","nombre":"Augusto Ramirez Lopez","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"9093","nombre":"DESPENSA LA BOQUITA","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"9163","nombre":"COMERCIAL TSUCHIDA","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"9157","nombre":"DESPENSA SAN CAYETANO","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"11069","nombre":"Despensa de la Gonzalez","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"10208","nombre":"Despensa Lujan","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"9113","nombre":"Maria Noelia Benitez Gonzalez","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"11152","nombre":"Distribuidora Edgar","barrio":"Bernardino Caballero","dias":"Lunes"},{"codigo":"10530","nombre":"Fabio Roman Diaz","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"8716","nombre":"COMERCIAL LUISITO","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"8999","nombre":"PASTELERIA ZUHI","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"11311","nombre":"Derlis Chavez","barrio":"Bernardino Caballero","dias":"Miercoles"},{"codigo":"10204","nombre":"Veronica Villalba","barrio":"Desconocido","dias":"Miercoles"},{"codigo":"11333","nombre":"Container Distribuidors S.A Makerplas","barrio":"Desconocido","dias":"Miercoles"},{"codigo":"11208","nombre":"ROSA DOMINGUEZ, JUAN BENJAMIN","barrio":"Desconocido","dias":"Miercoles"},{"codigo":"10016","nombre":"Maribel Aguilera","barrio":"Desconocido","dias":"Lunes"},{"codigo":"11071","nombre":"Luigi Giovanni Bazzano Villanueva","barrio":"Desconocido","dias":"Jueves"},{"codigo":"10185","nombre":"Anibal Enrique Ricardi","barrio":"Desconocido","dias":"Miercoles"},{"codigo":"11284","nombre":"Natalia Paredes","barrio":"Desconocido","dias":"Miercoles"},{"codigo":"8076","nombre":"COMERCIAL VALOR","barrio":"General Diaz","dias":"Jueves"},{"codigo":"1287","nombre":"Arca Holding SRL","barrio":"General Diaz","dias":"Jueves"},{"codigo":"1251","nombre":"GL COMUNICACIONES 2 DE CHEVERRIA, VISIT","barrio":"General Diaz","dias":"Jueves"},{"codigo":"10184","nombre":"LIBRERIA LUGO SRL","barrio":"General Diaz","dias":"Sabado"},{"codigo":"8158","nombre":"COMERCIAL RIMEX","barrio":"General Genes","dias":"Sabado"},{"codigo":"8091","nombre":"Blanca Villalba","barrio":"Guaraní","dias":"Viernes"},{"codigo":"10470","nombre":"MANCUELLO RODAS, DAMASIO","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8174","nombre":"GL COMUNICACIONES 4 DE ECHEVERRIA VILLAL","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8631","nombre":"Fernando Javier Arroquua Lopez","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8198","nombre":"TOMINAGA","barrio":"Guaraní","dias":"Viernes"},{"codigo":"9194","nombre":"ARGUELLO SANCHEZ, ISABELINO GERARDO","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8154","nombre":"DESPENSA Y CARNIC GUARANI 2","barrio":"Guaraní","dias":"Viernes"},{"codigo":"9310","nombre":"DESPENSA J A","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8580","nombre":"Herramegeas Servin Genez","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8759","nombre":"Rincon de la Delicias","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8066","nombre":"DESPENSA CASTORINA","barrio":"Guaraní","dias":"Viernes"},{"codigo":"10004","nombre":"TERESA VALDEZ","barrio":"Guaraní","dias":"Viernes"},{"codigo":"10975","nombre":"Despensa Stefany","barrio":"Guaraní","dias":"Viernes"},{"codigo":"4082","nombre":"ALMACEN MBOITCHINI","barrio":"Guaraní","dias":"Viernes"},{"codigo":"9992","nombre":"Estela Nuñez","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8129","nombre":"LENNY","barrio":"Guaraní","dias":"Viernes"},{"codigo":"10125","nombre":"DESPENSA SAN MIGUEL","barrio":"Guaraní","dias":"Viernes"},{"codigo":"11205","nombre":"Ruben Deleon Benitez","barrio":"Guaraní","dias":"Viernes"},{"codigo":"9892","nombre":"Llus Alberto Galeano","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8071","nombre":"DESPENSA Y PANADERIA AMAMBAY","barrio":"Guaraní","dias":"Viernes"},{"codigo":"9955","nombre":"DESPENSA ALFONSO","barrio":"Guaraní","dias":"Viernes"},{"codigo":"11406","nombre":"Jenny Gimenez","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8622","nombre":"CHARLES COMERCIAL","barrio":"Guaraní","dias":"Viernes"},{"codigo":"10203","nombre":"GL Comunicaciones 4","barrio":"Guaraní","dias":"Viernes"},{"codigo":"10066","nombre":"Julio Cesar Alvarez Gimenez","barrio":"Guaraní","dias":"Viernes"},{"codigo":"10752","nombre":"Elvio Eladio Cantaro","barrio":"Guaraní","dias":"Viernes"},{"codigo":"9239","nombre":"APA BEER DE LESMO, APARICIO","barrio":"Guaraní","dias":"Viernes"},{"codigo":"8567","nombre":"KIOSKO CARIOCA","barrio":"Guaraní","dias":"Sabado"},{"codigo":"8837","nombre":"CASA AGUSTIN","barrio":"Guaraní","dias":"Sabado"},{"codigo":"8728","nombre":"COPETIN TENEMOS","barrio":"Guaraní","dias":"Sabado"},{"codigo":"8374","nombre":"Reinaldo Alfonso","barrio":"Guaraní","dias":"Sabado"},{"codigo":"8974","nombre":"NATOS BEER","barrio":"Guaraní","dias":"Sabado"},{"codigo":"8045","nombre":"DESPENSA ARAUJO","barrio":"Guaraní","dias":"Sabado"},{"codigo":"8370","nombre":"KIOSKO E ILU","barrio":"Guaraní","dias":"Sabado"},{"codigo":"10277","nombre":"Sandra Elizabel Castro de Arguello","barrio":"Guaraní","dias":"Sabado"},{"codigo":"11078","nombre":"Hilda Nelida Araujo","barrio":"Guaraní","dias":"Sabado"},{"codigo":"9403","nombre":"DESPENSA EL BIGOTE","barrio":"Guaraní","dias":"Sabado"},{"codigo":"8371","nombre":"DESPENSA GUARANI","barrio":"Guaraní","dias":"Sabado"},{"codigo":"11074","nombre":"Rosaena Ferreira","barrio":"Guaraní","dias":"Sabado"},{"codigo":"6473","nombre":"CONVENIENCIA BAMU","barrio":"Guaraní","dias":"Sabado"},{"codigo":"9342","nombre":"EBTELA MANI ORUE","barrio":"Guillermina","dias":"Lunes"},{"codigo":"11031","nombre":"Liliana Duarte Britez","barrio":"Guillermina","dias":"Lunes"},{"codigo":"10112","nombre":"Cindua Britos","barrio":"Guillermina","dias":"Lunes"},{"codigo":"9407","nombre":"Victor Riquelme Centurion","barrio":"Guillermina","dias":"Lunes"},{"codigo":"10012","nombre":"DESPENSA SANTO DOMINGO","barrio":"Guillermina","dias":"Martes"},{"codigo":"10747","nombre":"EBTELA MANI ORUE","barrio":"Guillermina","dias":"Martes"},{"codigo":"14466","nombre":"Laura ene","barrio":"Guillermina","dias":"Martes"},{"codigo":"10680","nombre":"Maria Auxiliadora","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8527","nombre":"OVELAR, GREGORIO","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"11036","nombre":"Catalina Alvarenga Benitez","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"9389","nombre":"Deolinda Vazquez Moran","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8548","nombre":"MERCADO FAMILIAR","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8243","nombre":"DESPENSA ALICE","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8682","nombre":"Francisca Sosa Gimenez","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"10027","nombre":"Grupo Dos Reis","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10122","nombre":"LIZ FERNANDA GIMOEZ","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10065","nombre":"Carlos Hernan Peña Valdez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8452","nombre":"DESPENSA ABUELITO","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"11401","nombre":"Diana Blanco","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8768","nombre":"DESPENSA 3 MARIA","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10442","nombre":"Agueda Espinola","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8429","nombre":"Dertis Ramon Chavez Cristaldo","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"9077","nombre":"C DOUBLE A","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"9001","nombre":"Gustavo Adolfo Alonso Ocampos","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11072","nombre":"Olga Gonzalez Armos","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11223","nombre":"Jaona Vilamalor","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10934","nombre":"Feliciana Gomez de Martinez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10318","nombre":"Samira Morel","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"10515","nombre":"Eliza Lena Espinola","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"9368","nombre":"CANGURU BEER","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"9519","nombre":"DESPENSA Y ROPERIA PORTAL 2","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"9731","nombre":"TATIANA VILLALBA","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"8296","nombre":"DESPENSA LA ESPERANZA","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10041","nombre":"Lucio Goiri Martinez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11419","nombre":"ELIAS SAMUEL BENITEZ","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"9802","nombre":"Corry San Jorge","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"8949","nombre":"DESPENSA M.L.","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11371","nombre":"Claudelina Gimenez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"9694","nombre":"Vicenta Rodriguez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10618","nombre":"Ana Maria Barreto","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10278","nombre":"ROJAS VAZQUEZ, TORIBIA","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10034","nombre":"AURELLI, ANGELO PAULO","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11413","nombre":"Renata Lorena Aquino","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"9961","nombre":"Rosalva Figueredo","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"8042","nombre":"DESPENSA ANDERSON","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11123","nombre":"Rubén Ocampos","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11050","nombre":"Ramon Cabrera","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8869","nombre":"Sebastian Rojas Recalde","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11420","nombre":"Mini Market Urba","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"9626","nombre":"Nelida Ruisa Vera","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"8190","nombre":"despensa beer","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"10790","nombre":"Rosa Perez de Tsutsumi","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11068","nombre":"Cinthia Centurion","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11156","nombre":"Emerenciana Paredes Salinas","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10436","nombre":"Empanadas W & M","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"8572","nombre":"DESPENSA MYR","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"9688","nombre":"Gladis Garceta Ortiz","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"11418","nombre":"Liz Paola Riquelme","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"9134","nombre":"C M 24HS","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"8418","nombre":"DESPENSA SALVADOR","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10935","nombre":"Celina Garcia Fernandez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10844","nombre":"Sixta Benitez Lopez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11179","nombre":"Fanny Duarte","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11122","nombre":"Matilde Beatriz Martinez","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10777","nombre":"Cesar Valentin Duarte","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"9252","nombre":"NIMIA FRETES","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10454","nombre":"ISIDORA CABRAL","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"11290","nombre":"COMERCIAL SANTO DOMINGO","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10632","nombre":"Evangelina Ocampos","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10733","nombre":"Mirian Faviola Mancuello","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"6563","nombre":"Zanlida Martinez Ceba","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"10527","nombre":"Willian Alberto Mierde","barrio":"Maria Victoria","dias":"Lunes"},{"codigo":"8047","nombre":"Eusebia Peralta de Torales","barrio":"Maria Victoria","dias":"Martes"},{"codigo":"6226","nombre":"BAZAR SILVIA E A S UNIPERSONAL","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"10133","nombre":"Jose Carlos Rodas Zalema","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8616","nombre":"COMERCIAL SANTA FE","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8268","nombre":"DESPENSA ECONOMAX","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"10793","nombre":"Bruno Anibal Lezcano","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"11174","nombre":"Mataus Gomes Alves","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"9788","nombre":"FRIGORIFICO CONCEPCION SA","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8134","nombre":"Edgar Crepin Barreto Galeano","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"6433","nombre":"COMERCIAL SAN BLAS","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"11391","nombre":"RAMIREZ CARDOZO, CARLOS ANIBAL","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8246","nombre":"ALFONSO ESQUIVEL, DANIELA BEATRIZ","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"10791","nombre":"ALMACEN Y BAZAR ROMERO","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8082","nombre":"Monica Rocio Rojas Fariña","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"9991","nombre":"Gricelda Beatriz Boyar","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8168","nombre":"Fidencia Cartaello de Leon","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"11180","nombre":"Ingrid Natalia Caceres","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"10364","nombre":"Jolly Ismael Romero","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"9219","nombre":"Ramona Antonio Diaz","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"11298","nombre":"Carlos Antonio Galeano Escoba","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"9615","nombre":"Maria del Rosario Sanchez Gimenez","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"8759","nombre":"COPETIN LUCAS","barrio":"Mariscal Estigarribia","dias":"Miercoles"},{"codigo":"10791","nombre":"Gerardo Dionael Arguello Samaniego","barrio":"Pedro Juan Caballero","dias":"Martes"},{"codigo":"9409","nombre":"TAMAYO REPRESENTACIONES & SOCIEDAD ANONIMA","barrio":"Pedro Juan Caballero","dias":"Martes"},{"codigo":"11315","nombre":"Elida Diaz","barrio":"Perpetuo Socorro","dias":"Jueves"},{"codigo":"9233","nombre":"PANIFICADORA MIKKEY S.R.L","barrio":"Perpetuo Socorro","dias":"Jueves"},{"codigo":"11093","nombre":"Dolores Jerez Arana","barrio":"Perpetuo Socorro","dias":"Jueves"},{"codigo":"9447","nombre":"JUSTA GIMENEZ DE ORTIZ","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"11291","nombre":"Miguel Ramon Rodriguez Druz","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"9690","nombre":"MERCOSUR CENTER","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"10247","nombre":"David ogura","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"8606","nombre":"COPETIN TENTACION","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"9663","nombre":"VAN LOI, NGUYEN","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"10246","nombre":"Comercial Rivas","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"11353","nombre":"CWW GROUP E.A.S.","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"11149","nombre":"Michael William Ayala","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"11224","nombre":"CENTRO DE ENSEANZA INTEGRAL SRL","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"10201","nombre":"JIMENEZ MEDINA, HUGO LUIS","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"8141","nombre":"MARAVILLA DEL TRIGO","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"10982","nombre":"Miguela Sanabria","barrio":"Perpetuo Socorro","dias":"Sabado"},{"codigo":"9758","nombre":"VILLALBA VILLALBA, BERARDO ALBERTO","barrio":"San Gerardo","dias":"Sabado"},{"codigo":"8067","nombre":"SUPER CD SA","barrio":"San Gerardo","dias":"Sabado"},{"codigo":"10665","nombre":"NOGUERA CENTURION, GLORIA RAQUEL","barrio":"San Juan Neuman","dias":"Sabado"}],"lines":{"MOGUL":{"compradores":["C DOBLE A","Carlos Hernan Peña Valdez","CASA AGUSTIN","Catalina Alvarenga Benitez","Cinthia Britos","COMERCIAL SANTA FE","COMERCIAL SANTA ROSA","COPETIN TENEMOS","David ogura","Deolinda Vazquez Moran","Derlis Ramon Chavez Cristaldo","DESPENSA ALICE","DESPENSA CASTORINA","Despensa J.C","Despensa Luisito","DESPENSA Y ROPERIA PORTAL 2","Diana Blanco","ED COMERCIAL","Eliza Lene Espinola","Fabio Roman Diaz","Fidencia Carballo de Leon","GL COMUNICACIONES 1","Gladis Garcete Ortiz","GONZALEZ CABALLERO, HIPOLITO DANIEL","Hermenegildo Servin Genez","Jose Carlos Rodas Zalema","JUANA PEDRA","Julio Cesar Alvarez Gimenez","LIBRERIA LUGO SRL","Liliana Duarte Britez","Lucio Goiri Mart쭥z","MANCUELLO RODAS, DAMASIO","MERCADO FAMILIAR","NOGUERA CENTURION, GLORIA RAQUEL","PANIFICADORA MIKKEY S.R.L","Paula Rosa Mendez","Reinalda Jara Villalba","Rosalva Figueredo","YOSKE KAWASOKO TAKESHITA"],"total_compradores":39,"total_vendido":2710178,"meta_pct":0.8,"cobertura_pct":0.198},"MENTHO PLUS":{"compradores":["BENITEZ BEER","DESPENSA CASTORINA","Diana Blanco","Fabio Roman Diaz","Fidencia Carballo de Leon","GL COMUNICACIONES 4 DE ECHEVERRIA VILLAL","Gricelda Beatriz Bogar쬠","JIMENEZ MEDINA, HUGO LUIS","JUSTA GIMENEZ DE ORTIZ","laura arga񡠨10474)","NOGUERA CENTURION, GLORIA RAQUEL","Silvio Javier Araujo"],"total_compradores":12,"total_vendido":1036151,"meta_pct":0.6,"cobertura_pct":0.0609},"ROCKLETS":{"compradores":["ALMACEN MBOI?CHINI","AURELLI, ANGELO PAULO","C DOBLE A","CANGURU BEER","Carlos Hernan Peña Valdez","CASA AGUSTIN","Catalina Alvarenga Benitez","COMERCIAL ÑA POCHO SRL","COMERCIAL SANTA FE","COMERCIAL SANTA ROSA","Conv San Jorge","David ogura","Deolinda Vazquez Moran","DESPENSA ALICE","DESPENSA ECONOMAX","DESPENSA J.A","DESPENSA LA ESPERANZA","Despensa Luisito","DESPENSA M.L.","DESPENSA MYR","DESPENSA RYANCITO","DESPENSA Y CARNIC.GUARANI 2","DESPENSA Y ROPERIA PORTAL 2","ED COMERCIAL","GL COMUNICACIONES 4 DE ECHEVERRIA VILLAL","Hermenegildo Servin Genez","Jose Carlos Rodas Zalema","JUANA PEDRA","Julio Cesar Alvarez Gimenez","JUSTA GIMENEZ DE ORTIZ","laura arga񡠨10474)","Liliana Duarte Britez","Liz Paola Riquelme","Lucio Goiri Mart쭥z","Luigi Giovanni Bazzano Villanueva","MANCUELLO RODAS, DAMASIO","MERCADO FAMILIAR","Miguel Algel Maidana Cantaluppi","NOGUERA CENTURION, GLORIA RAQUEL","Olga González Armoa","PANIFICADORA MIKKEY S.R.L","Paula Rosa Mendez","Reinalda Jara Villalba","Renata Lorena Aquino","Ricardo Javier Vega","Rincon de la Delicias","YOSKE KAWASOKO TAKESHITA"],"total_compradores":47,"total_vendido":3548566,"meta_pct":0.8,"cobertura_pct":0.2386},"SALADIX":{"compradores":["Ana Maria Barreto","Blanca Villalba","CASA AGUSTIN","Catalina Alvarenga Benitez","Claudelina Gimenez","Comercial Maria Isabel","COMERCIAL ÑA POCHO SRL","COMERCIAL SANTA FE","COMERCIAL SANTA ROSA","COPETIN TENEMOS","David ogura","Deolinda Vazquez Moran","DESPENSA 3 MARIA","DESPENSA ECONOMAX","DESPENSA J.A","Despensa J.C","DESPENSA M.L.","DESPENSA MYR","DESPENSA RYANCITO","DESPENSA SAN CAYETANO","DESPENSA Y ROPERIA PORTAL 2","Edison Lescano Gonzalez","ESTELA MARI ORUE","Eusebio Ramon Barreto Escobar","Fernando Javier ARROQUIA LOPEZ","Francisca Sosa Gimenez","GL COMUNICACIONES 2 DE CHEVERRIA , VISIT","GL COMUNICACIONES 4 DE ECHEVERRIA VILLAL","Gustavo Adolfo Alonso Ocampos","HARAMOTO","Hermenegildo Servin Genez","Jose Carlos Rodas Zalema","JUANA PEDRA","Liz Paola Riquelme","Luigi Giovanni Bazzano Villanueva","Maribel Aguilera","MERCADO FAMILIAR","NISHIMURA","NOGUERA CENTURION, GLORIA RAQUEL","PERLITA COGORNO","Renata Lorena Aquino","Rosa Perez de Tsutsumi","Rosalva Figueredo","Sebastian Rojas Recalde","Silvio Javier Araujo","Sixta Benitez Lopez","YOSKE KAWASOKO TAKESHITA"],"total_compradores":47,"total_vendido":3847481,"meta_pct":0.8,"cobertura_pct":0.2386},"TORTUGUITA":{"compradores":["Abner Salomon","Alice Castillo Areco","ALMACEN MBOI?CHINI","Augusto Ramirez Lopez","BENITEZ BEER","Blanca Villalba","C DOBLE A","CANGURU BEER","Carlos Hernan Peña Valdez","CASA AGUSTIN","Cesar Valentin Duarte","COMERCIAL ÑA POCHO SRL","COMERCIAL SANTA FE","COPETIN TENEMOS","COPETIN TENTACION","Deolinda Vazquez Moran","Derlis Ramon Chavez Cristaldo","DESPENSA 3 MARIA","DESPENSA ABUELITO","DESPENSA ALICE","DESPENSA ECONOMAX","DESPENSA J.A","Despensa J.C","Despensa Luisito","DESPENSA M.L.","DESPENSA MYR","Despensa Nina","DESPENSA RYANCITO","DESPENSA SAN CAYETANO","DESPENSA SANTO DOMINGO","DESPENSA Y CARNIC.GUARANI 2","ED COMERCIAL","ESTELA MARI ORUE","Eusebio Ramon Barreto Escobar","Feliciana Gomez de Martinez","Fernando Javier ARROQUIA LOPEZ","Francisca Sosa Gimenez","GL COMUNICACIONES 4 DE ECHEVERRIA VILLAL","Gladis Garcete Ortiz","Gricelda Beatriz Bogar쬠","Gustavo Adolfo Alonso Ocampos","HARAMOTO","Hermenegildo Servin Genez","JIMENEZ MEDINA, HUGO LUIS","Jose Carlos Rodas Zalema","JUSTA GIMENEZ DE ORTIZ","KIOSKO CARIOCA","KL COMERCIAL","laura arga񡠨10474)","LENNY","Liliana Duarte Britez","Lucio Goiri Mart쭥z","MANCUELLO RODAS, DAMASIO","Maribel Aguilera","Nelida Ruisa Verá","NISHIMURA","NOGUERA CENTURION, GLORIA RAQUEL","Olga González Armoa","OVELAR, GREGORIO","Paula Rosa Mendez","Ramon Cabrera","Rincon de la Delicias","Rosa Perez de Tsutsumi","Rosalva Figueredo","Silvino Arce","Vicenta Rodriguez","YOSKE KAWASOKO TAKESHITA"],"total_compradores":67,"total_vendido":9967915,"meta_pct":0.9,"cobertura_pct":0.3401}},"historico":{"01-Enero":{"MOGUL":{"compradores":47,"vendido":2951726,"cobertura_pct":0.2386},"MENTHO PLUS":{"compradores":24,"vendido":2710358,"cobertura_pct":0.1218},"ROCKLETS":{"compradores":54,"vendido":3223211,"cobertura_pct":0.2741},"SALADIX":{"compradores":72,"vendido":6477152,"cobertura_pct":0.3655},"TORTUGUITA":{"compradores":95,"vendido":16976009,"cobertura_pct":0.4822}},"02-Febrero":{"MOGUL":{"compradores":55,"vendido":4332736,"cobertura_pct":0.2792},"MENTHO PLUS":{"compradores":15,"vendido":1840857,"cobertura_pct":0.0761},"ROCKLETS":{"compradores":49,"vendido":5554565,"cobertura_pct":0.2487},"SALADIX":{"compradores":46,"vendido":4062737,"cobertura_pct":0.2335},"TORTUGUITA":{"compradores":97,"vendido":26130839,"cobertura_pct":0.4924}},"03-Marzo":{"MOGUL":{"compradores":72,"vendido":7880122,"cobertura_pct":0.3655},"MENTHO PLUS":{"compradores":26,"vendido":3308178,"cobertura_pct":0.132},"ROCKLETS":{"compradores":53,"vendido":5528805,"cobertura_pct":0.269},"SALADIX":{"compradores":54,"vendido":8404188,"cobertura_pct":0.2741},"TORTUGUITA":{"compradores":84,"vendido":71066067,"cobertura_pct":0.4264}},"04-Abril":{"MOGUL":{"compradores":39,"vendido":2710178,"cobertura_pct":0.198},"MENTHO PLUS":{"compradores":12,"vendido":1036151,"cobertura_pct":0.0609},"ROCKLETS":{"compradores":47,"vendido":3548566,"cobertura_pct":0.2386},"SALADIX":{"compradores":47,"vendido":3847481,"cobertura_pct":0.2386},"TORTUGUITA":{"compradores":68,"vendido":9967915,"cobertura_pct":0.3452}}}},"SANTIAGO ROMERO":{"total_clientes_ruta":290,"clientes_ruta":[{"codigo":"9373","nombre":"3SV AGUARAY SOCIEDAD ANONIMA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8400","nombre":"4 HERMANOS ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11032","nombre":"Abel López Caballero","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11118","nombre":"AGROGANADERA NATALIA SOCIEDAD ANONIMA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10666","nombre":"Agustin Pinto","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"10830","nombre":"ALCARAZ ESCOBAR, MIGUEL GUSTAVO","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9274","nombre":"Alfredo Vargas","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8789","nombre":"ALMACEN WIL JUNIOR","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9873","nombre":"ALMACEN Y CARNICERIA MEDINA ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"1447","nombre":"ALONSO, JUAN","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"434","nombre":"ALVARENGA PEREZ","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"11405","nombre":"Amada Gonzáles ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11042","nombre":"Ana Coronel","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11350","nombre":"Ana Maria Larrea ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11349","nombre":"Anastacio Quintana","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10945","nombre":"Andrea Raquel Barrios Barrios","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8376","nombre":"Apolinaria Ocampos Gimenez","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10856","nombre":"Arco Iris Cotillón","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8769","nombre":"ARES 24HS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11040","nombre":"Arístides Arevalos","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11337","nombre":"Arminda Gomez ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"2799","nombre":"AYAVI\" S.A.","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8806","nombre":"BADO MAYORISTA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10529","nombre":"BAEZ VILLALBA, NOELIA ELIZABETH","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3154","nombre":"BAEZ, DAMIANA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"11330","nombre":"Baldomero Carlos Lopez ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8011","nombre":"BAZAR Y DESPENSA ROBERT","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11332","nombre":"Beatriz Gimenez ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10637","nombre":"BIG ATACADO BANDEIRANTES","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8453","nombre":"BIG BEBIDA 24HS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3066","nombre":"BIG BEBIDAS","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9360","nombre":"BL NOVEDADES DE BRENDA LIZ FERNANDEZ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11339","nombre":"Bodega  La Familia ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"3007","nombre":"BODEGA LOCUCHO","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8446","nombre":"BODEGA LOS AMIGOS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11361","nombre":"Bruna Chavez Baez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"3005","nombre":"Bruno Rodrigo Vera Sandoval","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9473","nombre":"CABALLERO GOMEZ, ADELA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11077","nombre":"Carla Rocio Martinez Gonzales ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10710","nombre":"Carlos Eduardo Matins Asuncao","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9268","nombre":"CARMIN CONVENIENCIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9259","nombre":"CARNICERIA D.R","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3012","nombre":"CARRERA OSORIO, LUCINA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8437","nombre":"CASA DE CARNE DR","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11198","nombre":"Casa de Carne Frontera","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9509","nombre":"CASA DE CARNE Y VERDULERIA LA CENTRAL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9721","nombre":"CASA MEDINA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9286","nombre":"CASA REINA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8583","nombre":"CASA VERDE","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11358","nombre":"CASTRO OZUNA, LIDER RAMON","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11342","nombre":"Celeida  Flora  Martinez ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11105","nombre":"Celidonia Lopez Cardozo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11352","nombre":"Cinthia Camila Benitez Benitez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11151","nombre":"Cintia Mabel Caballero de Ramoa","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11287","nombre":"Cintia Noemi Medina","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10441","nombre":"Cipriano de Moura Robles","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9245","nombre":"CLARISE SUARES","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3155","nombre":"COMEDOR SAN FRANCISCO DE PORTILLO, ELIDA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"1595","nombre":"COMEDOR ЁNDE ROGA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8629","nombre":"COMERCIAL 23","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8832","nombre":"COMERCIAL 3 L","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8377","nombre":"COMERCIAL BETO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8024","nombre":"COMERCIAL EDEMAR","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8774","nombre":"COMERCIAL EL SOL","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9516","nombre":"COMERCIAL EMILI DE SALINAS AGUERO, EMILCE","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"1516","nombre":"COMERCIAL ESTRELLA DEL NORTE","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9419","nombre":"COMERCIAL GONZALITO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9104","nombre":"COMERCIAL GUGU","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3011","nombre":"COMERCIAL KO`EJU","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9418","nombre":"COMERCIAL LA VICTORIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9967","nombre":"COMERCIAL LILIAN","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8780","nombre":"COMERCIAL MYG","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8005","nombre":"COMERCIAL SAN BLAS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8008","nombre":"COMERCIAL TREBOL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11343","nombre":"COMITE VECINAL Y PRODUCCION AGRICOLA SAN ANDRES","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8831","nombre":"CONVENIENCIA NARA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9440","nombre":"CONVENIENCIA Ё POSSY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"1231","nombre":"COOP.MULT. SAN ANDRES","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"3174","nombre":"COPETIN CASA REAL","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8751","nombre":"COPETIN MARIA VICTORIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8325","nombre":"COPETIN TRIUNFO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8892","nombre":"COPETIN VY`A RENDA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10236","nombre":"Cornelia Ayala Aguirre","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8786","nombre":"COSAS COSITAS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11380","nombre":"Cristaldo Ramirez Juan Ramon","barrio":"Chacoi","dias":"TODOS LOS DIAS"},{"codigo":"11297","nombre":"Cristhian David Alcaraz","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9643","nombre":"Dani Bebidas","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10271","nombre":"Daniel Figueredo ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9532","nombre":"DE ORUE DE BAZAN, ANGELA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8529","nombre":"DEPENSA DOS HERMANOS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9114","nombre":"DEPENSA LUCAS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11336","nombre":"Desp. Hosp. Internacional ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11338","nombre":"Desp. Sol Naciente ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9078","nombre":"DESP.VASILIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9517","nombre":"DESPENSA 12 HERMANAS NELIDA GOMEZ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8460","nombre":"DESPENSA 2 CORAZONES","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8487","nombre":"DESPENSA 8 DE DICIEMBRE","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9247","nombre":"DESPENSA A.L.L","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8318","nombre":"DESPENSA ALAN","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10461","nombre":"Despensa Alana","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8320","nombre":"DESPENSA ALBIZO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8915","nombre":"DESPENSA ALISON","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8306","nombre":"DESPENSA ANGEL DE LA GUARDA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3325","nombre":"DESPENSA BARBUDO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9000","nombre":"DESPENSA BLANCA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9124","nombre":"DESPENSA CAACUPE","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"1332","nombre":"DESPENSA CASA VERDE DE AIDA LUZ ESCOBAR","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9164","nombre":"DESPENSA CELINA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8019","nombre":"DESPENSA CESAR","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3027","nombre":"DESPENSA CHE PUEBLO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8241","nombre":"DESPENSA DAGOS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8018","nombre":"DESPENSA DERLIS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9220","nombre":"DESPENSA DND","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9435","nombre":"DESPENSA DOS HERMANOS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3023","nombre":"DESPENSA DOS HERMNITAS","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9472","nombre":"DESPENSA EDI","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8085","nombre":"DESPENSA EL HOGAR","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9248","nombre":"DESPENSA EL PINO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9237","nombre":"DESPENSA ELIZA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8762","nombre":"DESPENSA ESTRELLA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9256","nombre":"DESPENSA FERNANDITO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8660","nombre":"DESPENSA FREDDY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9270","nombre":"DESPENSA G.I.C","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9515","nombre":"DESPENSA GIRASOL DE MELGAREJO, FRANCIELY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3296","nombre":"DESPENSA HILDA DE MIRNA JARA BALBUENA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9471","nombre":"DESPENSA INTERNACIONAL DE MACENA DE AYAL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8022","nombre":"DESPENSA J. JUNIOR","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9075","nombre":"DESPENSA J.E","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3152","nombre":"DESPENSA J.R DE RAMOA, ROSANA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9027","nombre":"DESPENSA JADY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9434","nombre":"DESPENSA JANY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8829","nombre":"DESPENSA JANY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9495","nombre":"DESPENSA JM DE ROJAS, AURELIO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9320","nombre":"DESPENSA KEMILY CAMILA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8324","nombre":"DESPENSA KUKY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8010","nombre":"DESPENSA LA ECONOMIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9108","nombre":"DESPENSA LA ESQUINA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8957","nombre":"DESPENSA LA SKINA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3006","nombre":"DESPENSA LILA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9384","nombre":"DESPENSA LIZ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9079","nombre":"DESPENSA LIZ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9162","nombre":"DESPENSA LUCHI","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9475","nombre":"DESPENSA LUISITO DE BENITEZ, FELICIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8653","nombre":"DESPENSA M.B","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9210","nombre":"DESPENSA M.M","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10806","nombre":"DESPENSA M.M.","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9415","nombre":"DESPENSA MABEL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9417","nombre":"DESPENSA MANA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9375","nombre":"DESPENSA MILE","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9273","nombre":"DESPENSA ML","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8032","nombre":"DESPENSA NANCY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9246","nombre":"DESPENSA OLI","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9132","nombre":"DESPENSA ORO VERDE","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8317","nombre":"DESPENSA RAMOA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3185","nombre":"DESPENSA RAQUELITA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"3017","nombre":"DESPENSA S.J.L","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10855","nombre":"Despensa San Antonio","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8801","nombre":"DESPENSA SAN COSME Y DAMIAN","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9416","nombre":"DESPENSA SAN MARTIN","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9391","nombre":"DESPENSA SAN MIGUEL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8361","nombre":"DESPENSA SILVA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8916","nombre":"DESPENSA TAITO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8967","nombre":"DESPENSA VICENTA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8025","nombre":"DESPENSA VIRGINIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11197","nombre":"Despensa y Carniceria  MP","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10272","nombre":"Despensa y Carniceria Carlitos ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9452","nombre":"DESPENSA Y HELADERIA MELANI","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8770","nombre":"DESPENSA Y HOSPEDAJE INTERNACIONAL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8327","nombre":"DESPENSA YENY","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9107","nombre":"DESPENSA..SAN FRANCISCO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8534","nombre":"DESPȎSA MEL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8963","nombre":"DISTRI..DE COMBUSTIBLE CO`EJU S.A","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8331","nombre":"DISTRIBUIDORA DE COMBUSTIBLE COE'JU S.A","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10660","nombre":"DISTRIBUIDORA DE COMBUSTIBLE COE'YU SOCIEDAD ANONIMA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"1227","nombre":"DISTRIBUIDORA DE COMBUSTIBLES DELEON SA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"2800","nombre":"DISTRIBUIDORA DE COMBUSTIBLES DELEON SA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8927","nombre":"DISTRIBUIDORA G.M","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3130","nombre":"DISTRIBUIDORA PANSEV SOCIEDAD DE RESPONS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8291","nombre":"E.R","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10401","nombre":"Emilce Veron Gimenez ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8719","nombre":"EMPANADAS PASTORITA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10819","nombre":"EScurra Maidana Elida ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10133","nombre":"Eva Arevalos ","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9716","nombre":"FERREIRA, ISIDRO INALECIO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11012","nombre":"Fidelina Aguirre ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11356","nombre":"Flora Ortiz","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"3192","nombre":"FRANCIELLI OLMEDO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8491","nombre":"FRUTERIA LA ECONOMIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9269","nombre":"FRUTERIA PRIMAVERA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10034","nombre":"GIMENEZ ZEVALLO, RONALDO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10197","nombre":"Gladys Carmen Florentin de Barrios","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9361","nombre":"Gleiciane Soares","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"2801","nombre":"GONZALEZ CANDIA, LIZ ELIANE","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10866","nombre":"Graciela Maldonado Fernández ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8421","nombre":"GRUPO RONALD S.R.L","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8756","nombre":"GRUPO SAN JUAN S.A","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11133","nombre":"Gustavo Anibal Maidana","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9390","nombre":"HELADERIA GABI","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9285","nombre":"HELADERIA SAN MIGUEL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11340","nombre":"Herminia Flores ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9068","nombre":"Irene Acosta Gonzáles","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10134","nombre":"Isabel Chavez","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"11370","nombre":"Ivan Nuñes Chilaver","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8187","nombre":"J.R CONVENIENCIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11153","nombre":"Javier Esteban Gimenez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11360","nombre":"Joana Zelaya ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9140","nombre":"Jorge Barrios","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11163","nombre":"Jorge Luis Martinez Gonzatto","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11303","nombre":"Jorge Ramón SantaCruz","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11329","nombre":"Juan Cristaldo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11328","nombre":"Juana Nuñez Lopez ","barrio":"Chacoi","dias":"TODOS LOS DIAS"},{"codigo":"11335","nombre":"Junior Daneri Gonzalez ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11076","nombre":"Kaique Escurra Fereira","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8645","nombre":"Karen Villalba Casco","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11278","nombre":"La Bodega de Mil","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11344","nombre":"Laura  Alcaraz","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11347","nombre":"Laura Rios ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8398","nombre":"Leliane Aparecida Gomes ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11331","nombre":"Leticia Guanes ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10895","nombre":"Librada Alfonza Gonzalez Sarabia ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11156","nombre":"Lilian Isabel Barrios Barrios","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10835","nombre":"Lilian Machado Collar","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9844","nombre":"Lis Noelia Lopez Gonzales","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"9952","nombre":"Liz Karina Vieira Chavez","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11173","nombre":"Liz Mabel Paredes Alfonso","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8672","nombre":"LOPEZ ACOSTA, PATRICIA ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11354","nombre":"Lorena Elizabeth Melgarejo ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11062","nombre":"LUCERO SERVIAN, ADRIANA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11364","nombre":"Lucia Gonsalez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8028","nombre":"LUIS ANIBAL OLAZAR ARGUELLO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11099","nombre":"Luis Emilio ayala Menese ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10803","nombre":"Luz Marina Gonzalez Deif","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10956","nombre":"Luz Marina González Deif","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9679","nombre":"Marcio Ortiz Sachelarid","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11415","nombre":"Maria Aparecida Ortiz Silva","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10526","nombre":"Maria Elodia Gonzales","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11230","nombre":"Maria Liduvina Ramirez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10846","nombre":"Maria Mercedes Raquel ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11341","nombre":"Mario  Serratti","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11043","nombre":"Marisa Vera","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9723","nombre":"MARTINEZ FERREIRA, LIZ ADRIANA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11423","nombre":"Mateos Gimenez Suarez ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9680","nombre":"Maura Diaz Bordon","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11345","nombre":"Maura Vazquez Melgarejo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11299","nombre":"Mauro Escurra naidana","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3014","nombre":"MB COMERCIAL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8775","nombre":"MERCADO LILA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"10868","nombre":"Mirian Ramoa","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9699","nombre":"Mirta Avalos","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11348","nombre":"Nancy Insfran ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10738","nombre":"Nelson Martinez","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11351","nombre":"NHL SOCIEDAD ANONIMA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11041","nombre":"Nolberto Oliveira","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11135","nombre":"Nuestra Casa S.A.","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8031","nombre":"ÑEMUHA KOEJU","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10494","nombre":"OTAZU BOVEDA YSMALIA EDUARDA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8565","nombre":"P.R DESPENSA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9520","nombre":"PASTELERIA BN","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8490","nombre":"PASTELERIA CORAL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8642","nombre":"PASTELERIA IRIS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9387","nombre":"PICO DE ORO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9885","nombre":"PORTILLO CARNEIRO, DANIEL","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9374","nombre":"POWER CENTER","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9102","nombre":"R.R.Comercial","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10500","nombre":"Ramona Alvarenga","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"1230","nombre":"RESTO BAR LA BADEЉTA DE GONZALEZ, VIRGI","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"8530","nombre":"ROBERT FREDDY BUENO BARBOZA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11373","nombre":"Roberto Ramirez Ayala","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9884","nombre":"RONALD  S.R.L.","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10538","nombre":"Rosa Asuncion Benitez A񡺣o ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8004","nombre":"ROSANA MORALES GONZALEZ","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11357","nombre":"Rosana Pereira","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10237","nombre":"Rumilda Rojas Escurra","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3004","nombre":"SAN JUAN MAYORISTA","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"11385","nombre":"SANABRIA MORA, ILDA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9494","nombre":"SANTA ELENA DE GIMENEZ, GENARO","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11416","nombre":"Schuck Ermelira","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"10067","nombre":"SILVA, RAMONA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11128","nombre":"SILVERO PINTO MERCEDES ROSA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11365","nombre":"Sully Domingues","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9433","nombre":"SUSI CONVENIECIA","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"11075","nombre":"SUZUKI, ALICE AIKO","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11039","nombre":"SUZUKI, SERGIO YUKIO","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11346","nombre":"Teodoro Ramirez ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"3153","nombre":"TIENDA PILAR DE MARIA DEL PILAR","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"2411","nombre":"V.S.BEBIDAS","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"3100","nombre":"VERDE PARAISO","barrio":"Karapai","dias":"TODOS LOS DIAS"},{"codigo":"8540","nombre":"VIRTUAL CIBER","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"},{"codigo":"9644","nombre":"ZARATE AYALA, ALINE","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10400","nombre":"Zoila Valerio Espinoza","barrio":"Capitan Bado","dias":"TODOS LOS DIAS"}],"lines":{"MOGUL":{"compradores":["ALCARAZ ESCOBAR, MIGUEL GUSTAVO","BL NOVEDADES DE BRENDA LIZ FERNANDEZ","CARMIN CONVENIENCIA","CASA DE CARNE DR","Cipriano de Moura Robles","COMERCIAL GUGU","COMERCIAL LA VICTORIA","Cristhian David Alcaraz","DE ORUE DE BAZAN, ANGELA","DEPENSA DOS HERMANOS","DESPENSA 8 DE DICIEMBRE","DESPENSA BARBUDO","DESPENSA SAN MIGUEL","EMPANADAS PASTORITA","HELADERIA GABI","Laura  Alcaraz","Luis Emilio ayala Menese","Marcio Ortiz Sachelarid","Roberto Ramirez Ayala","SILVA, RAMONA"],"total_compradores":20,"total_vendido":1014334,"meta_pct":0.8,"cobertura_pct":0.069},"MENTHO PLUS":{"compradores":["Abel López Caballero","Ana Coronel","Cristaldo Ramirez Juan Ramon","Cristhian David Alcaraz","DESPENSA CESAR","Fidelina Aguirre","Lilian Isabel Barrios Barrios","Nelson Martinez","Roberto Ramirez Ayala","ZARATE AYALA, ALINE"],"total_compradores":10,"total_vendido":775048,"meta_pct":0.6,"cobertura_pct":0.0345},"ROCKLETS":{"compradores":["ALCARAZ ESCOBAR, MIGUEL GUSTAVO","CABALLERO GOMEZ, ADELA","CARMIN CONVENIENCIA","CASA MEDINA","Cipriano de Moura Robles","COMERCIAL EDEMAR","Cornelia Ayala Aguirre","Cristaldo Ramirez Juan Ramon","Cristhian David Alcaraz","DEPENSA DOS HERMANOS","DESPENSA 8 DE DICIEMBRE","DESPENSA A.L.L","DESPENSA ANGEL DE LA GUARDA","DESPENSA BARBUDO","DESPENSA BLANCA","DESPENSA EL PINO","DESPENSA FREDDY","DESPENSA JADY","DESPENSA SAN MARTIN","DESPENSA SILVA","DESPENSA TAITO","DESPENSA YENY","DISTRIBUIDORA G.M","EMPANADAS PASTORITA","Fidelina Aguirre","GIMENEZ ZEVALLO, RONALDO","Gleiciane Soares","J.R CONVENIENCIA","Laura Rios","Luis Emilio ayala Menese","Marcio Ortiz Sachelarid","Nancy Insfran","Nelson Martinez","R.R.Comercial","ROBERT FREDDY BUENO BARBOZA","Roberto Ramirez Ayala","Rosana Pereira","Zoila Valerio Espinoza"],"total_compradores":38,"total_vendido":4190238,"meta_pct":0.8,"cobertura_pct":0.131},"SALADIX":{"compradores":["Abel López Caballero","BIG ATACADO BANDEIRANTES","BL NOVEDADES DE BRENDA LIZ FERNANDEZ","CARMIN CONVENIENCIA","CASA VERDE","Cipriano de Moura Robles","COMERCIAL 23","COMERCIAL EDEMAR","COMERCIAL GUGU","COMERCIAL TREBOL","Cristhian David Alcaraz","DEPENSA DOS HERMANOS","DESPENSA BARBUDO","DESPENSA JADY","DESPENSA LIZ","DESPENSA MANA","DESPENSA SAN MIGUEL","DESPENSA YENY","FERREIRA, ISIDRO INALECIO","Fidelina Aguirre","GIMENEZ ZEVALLO, RONALDO","HELADERIA GABI","Junior Daneri Gonzalez","Lilian Isabel Barrios Barrios","Luis Emilio ayala Menese","Mauro Escurra naidana","NHL SOCIEDAD ANONIMA","ROBERT FREDDY BUENO BARBOZA","Roberto Ramirez Ayala","SILVA, RAMONA","Zoila Valerio Espinoza"],"total_compradores":31,"total_vendido":6539235,"meta_pct":0.8,"cobertura_pct":0.1069},"TORTUGUITA":{"compradores":["4 HERMANOS","ALCARAZ ESCOBAR, MIGUEL GUSTAVO","Alfredo Vargas","ARES 24HS","Arminda Gomez","BL NOVEDADES DE BRENDA LIZ FERNANDEZ","CARMIN CONVENIENCIA","CASA MEDINA","Cinthia Camila Benitez Benitez","Cipriano de Moura Robles","COMERCIAL EDEMAR","COMERCIAL GUGU","COMERCIAL TREBOL","CONVENIENCIA Ё POSSY","Cornelia Ayala Aguirre","Cristaldo Ramirez Juan Ramon","Cristhian David Alcaraz","DEPENSA DOS HERMANOS","DEPENSA LUCAS","DESPENSA 8 DE DICIEMBRE","DESPENSA A.L.L","DESPENSA ANGEL DE LA GUARDA","DESPENSA CESAR","DESPENSA EL PINO","DESPENSA ESTRELLA","DESPENSA FREDDY","DESPENSA JADY","DESPENSA LIZ","DESPENSA M.M","DESPENSA MANA","DESPENSA SAN MARTIN","DESPENSA SAN MIGUEL","DESPENSA SILVA","DESPENSA TAITO","DESPENSA YENY","EMPANADAS PASTORITA","FRUTERIA LA ECONOMIA","GIMENEZ ZEVALLO, RONALDO","Gleiciane Soares","HELADERIA GABI","Irene Acosta Gonzáles","J.R CONVENIENCIA","Junior Daneri Gonzalez","Karen Villalba Casco","Laura  Alcaraz","Lilian Isabel Barrios Barrios","Luis Emilio ayala Menese","Marcio Ortiz Sachelarid","Mirian Ramoa","ROBERT FREDDY BUENO BARBOZA","Roberto Ramirez Ayala","Rosana Pereira","SILVA, RAMONA","ZARATE AYALA, ALINE","Zoila Valerio Espinoza"],"total_compradores":55,"total_vendido":16878022,"meta_pct":0.9,"cobertura_pct":0.1897}},"historico":{"01-Enero":{"MOGUL":{"compradores":17,"vendido":1105002,"cobertura_pct":0.0586},"MENTHO PLUS":{"compradores":6,"vendido":1340668,"cobertura_pct":0.0207},"ROCKLETS":{"compradores":26,"vendido":3060221,"cobertura_pct":0.0897},"SALADIX":{"compradores":28,"vendido":3084321,"cobertura_pct":0.0966},"TORTUGUITA":{"compradores":42,"vendido":20449261,"cobertura_pct":0.1448}},"02-Febrero":{"MOGUL":{"compradores":27,"vendido":3036451,"cobertura_pct":0.0931},"MENTHO PLUS":{"compradores":13,"vendido":1130357,"cobertura_pct":0.0448},"ROCKLETS":{"compradores":40,"vendido":4245297,"cobertura_pct":0.1379},"SALADIX":{"compradores":37,"vendido":3879212,"cobertura_pct":0.1276},"TORTUGUITA":{"compradores":51,"vendido":11579132,"cobertura_pct":0.1759}},"03-Marzo":{"MOGUL":{"compradores":46,"vendido":5427173,"cobertura_pct":0.1586},"MENTHO PLUS":{"compradores":11,"vendido":1719245,"cobertura_pct":0.0379},"ROCKLETS":{"compradores":45,"vendido":9643559,"cobertura_pct":0.1552},"SALADIX":{"compradores":61,"vendido":7831060,"cobertura_pct":0.2103},"TORTUGUITA":{"compradores":67,"vendido":44173732,"cobertura_pct":0.231}},"04-Abril":{"MOGUL":{"compradores":20,"vendido":1014334,"cobertura_pct":0.069},"MENTHO PLUS":{"compradores":10,"vendido":775048,"cobertura_pct":0.0345},"ROCKLETS":{"compradores":38,"vendido":4190238,"cobertura_pct":0.131},"SALADIX":{"compradores":31,"vendido":6539235,"cobertura_pct":0.1069},"TORTUGUITA":{"compradores":55,"vendido":16878022,"cobertura_pct":0.1897}}}},"Lilian Ramirez Villasboa":{"total_clientes_ruta":239,"clientes_ruta":[{"codigo":"9329","nombre":"25 HORAS MARKITO BEER","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11176","nombre":"Adela Melgarejo Fretes","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9218","nombre":"ALBA CELESTE CABALLERO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9397","nombre":"ALINE BEER","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8348","nombre":"ALINE COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10732","nombre":"Aline Cristiane Torres","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9265","nombre":"ALMACEN SAN JOSE","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10493","nombre":"Ana Cristina","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9864","nombre":"Anastacia Villalba ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10226","nombre":"Angelica Recalde","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9168","nombre":"ANITA COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9443","nombre":"ARECO RIVEROS, JUAN","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8947","nombre":"Arnaldo Garcia Lopez","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10940","nombre":"ASOCIACION DE LOS PADRES REDENTORISTAS DEL PARAGUAY(APAREPY)","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9328","nombre":"BAZAR ELI","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9150","nombre":"BAZAR ELVA ANEXO DESPENSA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8021","nombre":"BAZAR GLORIA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9221","nombre":"BEBITA NOVEDADES","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8700","nombre":"BELLA VISTA LANCH","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11260","nombre":"Bodega El Gordo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10570","nombre":"Brenda Martinez Bazzano","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8576","nombre":"C.M COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9363","nombre":"CARNICERIA J.J","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8639","nombre":"CASA JUANI","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9426","nombre":"CASA MARGOT","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8409","nombre":"CASA RAMIREZ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11110","nombre":"Celeste Fernandez Valenzuela","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9126","nombre":"Celia Caceres","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11244","nombre":"Celia Zara Carballo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10936","nombre":"Celina Garcia Castillo","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10562","nombre":"Celsa Florenciano","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10333","nombre":"Comedor la Victoria","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11111","nombre":"Comercial Alif 2","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8390","nombre":"COMERCIAL AQUI AGORA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8650","nombre":"COMERCIAL BONANZA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8366","nombre":"COMERCIAL C.L.G","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9446","nombre":"COMERCIAL CRISTALDO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9428","nombre":"COMERCIAL DANIFFER","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9383","nombre":"COMERCIAL DENIS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8655","nombre":"COMERCIAL DIANA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8013","nombre":"COMERCIAL ESTRELLA DEL NORTE","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9242","nombre":"COMERCIAL FG","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9492","nombre":"COMERCIAL IAM DE RUIZ, LUCIANA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9611","nombre":"COMERCIAL ITA POTY DE MAURA RAQUEL JARA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8924","nombre":"COMERCIAL LARREA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9425","nombre":"COMERCIAL LUISITO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9214","nombre":"COMERCIAL M Y M","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8551","nombre":"COMERCIAL MIRASOL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8818","nombre":"COMERCIAL MONZON","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8618","nombre":"COMERCIAL N.D","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8350","nombre":"COMERCIAL NARANJA DUNCE","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9369","nombre":"COMERCIAL PLANALTO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8535","nombre":"COMERCIAL R.R","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8607","nombre":"COMERCIAL ROCIO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8666","nombre":"COMERCIAL SAN ALFONSO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9241","nombre":"COMERCIAL SAN FERNANDO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8754","nombre":"COMERCIAL SAN FRANCISCO II","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8002","nombre":"COMERCIAL SAN JUAN","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9217","nombre":"COMERCIAL SANTO DOMINGO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8549","nombre":"COMERCIAL TARUMA","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9129","nombre":"COMERCIAL V.M.V","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10559","nombre":"Comercial Y Conveniencia 67","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9330","nombre":"COMERCIAL Ё VITO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8918","nombre":"COMERCIAL ЅMUHA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11301","nombre":"Construpar PY E.A.S","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8665","nombre":"CONVENIENCIA BARRIO APA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9223","nombre":"CONVENIENCIA EL GATO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8577","nombre":"CONVENIENCIA L.M","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9427","nombre":"CONVENIENCIA MG","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9276","nombre":"CONVENIENCIAS TAJY","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8427","nombre":"COPETIN LA TERMINAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9633","nombre":"Cornelia Gonzalez de Cardozo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11017","nombre":"Damián Alves Nuñes","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10566","nombre":"Dario Ramon Aguero Martinez","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9024","nombre":"DEDECOS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9257","nombre":"DENISSE NOVEDADES","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8498","nombre":"DESPENSA  MATI","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9407","nombre":"DESPENSA 3 HERMANOS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9239","nombre":"DESPENSA 4 HIJOS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8442","nombre":"DESPENSA ADELA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8931","nombre":"DESPENSA ALEXIS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8905","nombre":"DESPENSA ALMA LUZ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8640","nombre":"DESPENSA ANKI","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8668","nombre":"DESPENSA AQUIDABAN","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8343","nombre":"DESPENSA ARIANITA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8407","nombre":"DESPENSA ARINITA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9127","nombre":"DESPENSA AVENIDA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8543","nombre":"DESPENSA BARRIO APA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8965","nombre":"DESPENSA CALLE ULTIMA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10567","nombre":"Despensa Clarise","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10558","nombre":"Despensa Don Bento","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8016","nombre":"DESPENSA EL BARATITO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9240","nombre":"DESPENSA EL TREBOL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8492","nombre":"DESPENSA ELIANE","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9146","nombre":"DESPENSA ELVA","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8696","nombre":"DESPENSA FANNY","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8585","nombre":"DESPENSA FLORES","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9275","nombre":"DESPENSA FRANCIS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8693","nombre":"DESPENSA GARCETE","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9128","nombre":"DESPENSA GUARANI","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8420","nombre":"DESPENSA GUARANI 2","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9264","nombre":"DESPENSA IRIS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8367","nombre":"DESPENSA J.N","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8335","nombre":"DESPENSA JUANA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9445","nombre":"DESPENSA LAS MARIAS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9213","nombre":"DESPENSA MANA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9130","nombre":"DESPENSA MARIA AUXILIADORA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9141","nombre":"DESPENSA MINGA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8314","nombre":"DESPENSA MOREL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9362","nombre":"DESPENSA PACHI","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11160","nombre":"Despensa Panda","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8573","nombre":"DESPENSA PARAISO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8345","nombre":"DESPENSA PATY","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9222","nombre":"DESPENSA PAULA FERNANDEZ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8191","nombre":"DESPENSA PEDRO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8122","nombre":"DESPENSA R Y G","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9298","nombre":"DESPENSA REINA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8948","nombre":"DESPENSA S.A.","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9448","nombre":"DESPENSA SAMUELITO DE BENITEZ, SILVIA CA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8422","nombre":"DESPENSA SAN FRANCISCO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8328","nombre":"DESPENSA SAN JUAN","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9406","nombre":"DESPENSA SAN LUIS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8379","nombre":"DESPENSA SAULITO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9041","nombre":"DESPENSA SIRENE","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8346","nombre":"DESPENSA TOBIAS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8197","nombre":"DESPENSA TOM","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9364","nombre":"DESPENSA TUPI","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9238","nombre":"DESPENSA Y CARNICERIA LA ESQUINA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10757","nombre":"Despensa y Carnicería Mila","barrio":"Puentesiño","dias":"TODOS LOS DIAS"},{"codigo":"10754","nombre":"Despensa y Confiteria kave","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10755","nombre":"Distribuidora San Lucas","barrio":"Puentesiño","dias":"TODOS LOS DIAS"},{"codigo":"8347","nombre":"DON NENE","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8692","nombre":"DSPENSA SAN BLAS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8654","nombre":"Elpidio Junior Gonçalves ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10826","nombre":"Eva Ramirez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10617","nombre":"Fabio Gimenez ","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10554","nombre":"Farmacia Nuestra Sra de F೩ma","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8330","nombre":"FARMACIA VIRGEN DEL ROCIO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11305","nombre":"Feliciano Alfonso Gimenez ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11288","nombre":"FERREIRA ROJAS, SANDRA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10761","nombre":"FIGUEREDO CHAVEZ, PEDRO MIGUEL ANTONIO","barrio":"Puentesiño","dias":"TODOS LOS DIAS"},{"codigo":"10759","nombre":"FIGUEREDO CHAVEZ, PEDRO MIGUEL ANTONIO","barrio":"Puentesiño","dias":"TODOS LOS DIAS"},{"codigo":"11090","nombre":"FIGUEREDO GARCIA DE CENTURION, ZUNILDA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10978","nombre":"Flaviana Centurión ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9263","nombre":"Flora","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"3193","nombre":"FRANCIELLI FERNANDEZ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10859","nombre":"Francisco Jara","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9493","nombre":"FRIOS SAULITO DE CACERES CABRERA, LUANA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9299","nombre":"FRUTERIA BUEN PRECIO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8909","nombre":"GALEANO COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10937","nombre":"GONCALVES JUNIOR, ELPIDIO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11182","nombre":"Gustavo Samuel Aguilera Vadora","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8003","nombre":"HAGNS S.R.L","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8749","nombre":"HELADERIA LIZ","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10863","nombre":"Hermelinda Vera","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9666","nombre":"Honorio Aguero","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10215","nombre":"Ignacia Martinez","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9408","nombre":"INMACULADA COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10862","nombre":"Inmaculada Jara","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11424","nombre":"Jennifer Royg Aguero","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"8758","nombre":"JESICA MABEL ORTIZ","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11130","nombre":"Jesyca Mabel Ortiz","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11232","nombre":"Jorge Armia","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8079","nombre":"Jorge Ramon Gonzalez Rojas ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11325","nombre":"Jorge Raúl  Villalba  Caceres","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11387","nombre":"Jorgelino Avalos ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10346","nombre":"JUANA ORTEGA ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9061","nombre":"KAGUARE I COMERCIAL ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8454","nombre":"LARI COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10484","nombre":"Laura Concepcion Cristaldo Godoy","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8023","nombre":"LAURITA COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9169","nombre":"LIBRERIA NANCY","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10729","nombre":"Lilian Librada Perez","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10602","nombre":"Liz Ramona Vadora","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9167","nombre":"LUCAS COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10872","nombre":"Luci Valenzuela","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9315","nombre":"MARAVICHؠBEER","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10107","nombre":"Marcelia Areco ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9911","nombre":"MARCELO BEER","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11398","nombre":"Maria Dionicia Benitez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10827","nombre":"Maria Ester Ledesma ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11296","nombre":"Maria Lucila Campuzano","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11185","nombre":"Maria Magdalena Fretez","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10615","nombre":"Maria Moral","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8925","nombre":"Marilda Caceres","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9634","nombre":"Marilda Valensuela","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10497","nombre":"Marlene Esteche","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8365","nombre":"MARTA COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11222","nombre":"Mercedes Galeano","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9617","nombre":"Mirian Cipriana Irala Lugo","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9444","nombre":"Mirian Leticia Gonzalez Mendosa","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9449","nombre":"Nancy Beatriz Ariste Villalba","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10218","nombre":"Natalia Arguello","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11014","nombre":"Natalia Arguello","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10139","nombre":"Nelly Figueredo","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11191","nombre":"Nelson Ramirez Mora","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8006","nombre":"NEMUHA VIRGEN DE LAS GRACIAS ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11381","nombre":"Nestor Coronel","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9212","nombre":"NICOOLI BEERS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10908","nombre":"Nilsen Nathalia Ramirez Chavez","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10568","nombre":"Ninfa Achucarro","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10869","nombre":"Nora Marin","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9225","nombre":"PANADERIA LIZ JAZMIN","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8009","nombre":"PANADERIA MARUZEN","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8336","nombre":"PANIFICADORA FLEITAS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8015","nombre":"PANIFICADORA NORMITA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8596","nombre":"PANIFICADORA Q DELICIA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8767","nombre":"PAPER MANIA(J.R)","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8014","nombre":"PARADOR LA ROTONDA","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11369","nombre":"Patricia Rodas","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11262","nombre":"PEREIRA YEGROS, YOHANA PAOLA","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"9224","nombre":"PETROCHACO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9300","nombre":"PIRULINO BEERS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10525","nombre":"Priscila Comercial ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"1323","nombre":"PUENTE AQUIDABAN DE YSABEL BENITEZ","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"1319","nombre":"PUNTO SHOP DE ROJAS DE GONZALEZ, ROSEN","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8725","nombre":"R Y R COMERCIAL S.R.L","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11004","nombre":"Ramona Beariz","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10938","nombre":"Rosalina Amarilla ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10870","nombre":"Rosana Pereira","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10614","nombre":"Ruben Dario Gimenez","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11265","nombre":"Rumilda Gonzalez","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10140","nombre":"Salvadora Servian ","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9211","nombre":"SAN FRANCISCO 24HS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10831","nombre":"Sandra Beatriz Cristaldo Cuevas ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10616","nombre":"Sandra Esquivel","barrio":"Cruce Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10228","nombre":"SORIA FLEITAS, CLAUDIO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11275","nombre":"Store Informática ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10756","nombre":"Supermercado Caracol","barrio":"Puentesiño","dias":"TODOS LOS DIAS"},{"codigo":"9030","nombre":"TIMO COMERCIAL DE FERREIRA ORTEGA, JULIA","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"10860","nombre":"Tina ","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10651","nombre":"UDDIN, MD JASHIM","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9301","nombre":"UN POCO DE TODO","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"8550","nombre":"V.R COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9216","nombre":"VALEN COMERCIAL","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"11409","nombre":"Victor Morinigo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11408","nombre":"Victor Morinigo","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10871","nombre":"Viviana Gómez de Arguello","barrio":"Bella Vista","dias":"TODOS LOS DIAS"},{"codigo":"9215","nombre":"ЅMUHA VIRGEN DE LAS GRACIAS","barrio":"Bella Vista","dias":"TODOS LOS DIAS"}],"lines":{"MOGUL":{"compradores":["BAZAR GLORIA","CASA JUANI","COMERCIAL SAN ALFONSO","DESPENSA AVENIDA","FRIOS SAULITO DE CACERES CABRERA, LUANA","Hermelinda Vera","KAGUARE I COMERCIAL","MARCELO BEER"],"total_compradores":8,"total_vendido":351400,"meta_pct":0.8,"cobertura_pct":0.0335},"MENTHO PLUS":{"compradores":["DESPENSA AVENIDA","Jorgelino Avalos"],"total_compradores":2,"total_vendido":125494,"meta_pct":0.6,"cobertura_pct":0.0084},"ROCKLETS":{"compradores":["ASOCIACION DE LOS PADRES REDENTORISTAS DEL PARAGUAY(APAREPY)","Bodega El Gordo","Celeste Fernandez Valenzuela","COMERCIAL ROCIO","Despensa Don Bento","DESPENSA ELIANE","DESPENSA J.N","Despensa Panda","DESPENSA PATY","GONCALVES JUNIOR, ELPIDIO","Honorio Aguero","Jennifer Royg Aguero","MARCELO BEER","Maria Lucila Campuzano","PANIFICADORA FLEITAS","Victor Morinigo"],"total_compradores":16,"total_vendido":686310,"meta_pct":0.8,"cobertura_pct":0.0669},"SALADIX":{"compradores":["ALBA CELESTE CABALLERO","Angelica Recalde","BELLA VISTA LANCH","CASA JUANI","COMERCIAL BONANZA","COMERCIAL SAN ALFONSO","DESPENSA  MATI","DESPENSA ALMA LUZ","DESPENSA AVENIDA","DESPENSA CALLE ULTIMA","Despensa Don Bento","DESPENSA ELIANE","DESPENSA PARAISO","DESPENSA SAMUELITO DE BENITEZ, SILVIA CA","GALEANO COMERCIAL","GONCALVES JUNIOR, ELPIDIO","Jorge Armia","Maria Lucila Campuzano","Maria Magdalena Fretez","Rumilda Gonzalez"],"total_compradores":20,"total_vendido":1072104,"meta_pct":0.8,"cobertura_pct":0.0837},"TORTUGUITA":{"compradores":["Adela Melgarejo Fretes","Angelica Recalde","ASOCIACION DE LOS PADRES REDENTORISTAS DEL PARAGUAY(APAREPY)","BELLA VISTA LANCH","Bodega El Gordo","Brenda Martinez Bazzano","Celeste Fernandez Valenzuela","COMERCIAL AQUI AGORA","COMERCIAL BONANZA","COMERCIAL ITA POTY DE MAURA RAQUEL JARA","COMERCIAL ROCIO","COMERCIAL V.M.V","CONVENIENCIA BARRIO APA","DESPENSA ALMA LUZ","DESPENSA AVENIDA","DESPENSA CALLE ULTIMA","Despensa Don Bento","DESPENSA ELIANE","DESPENSA ELVA","DESPENSA GUARANI","DESPENSA GUARANI 2","DESPENSA JUANA","DESPENSA MOREL","DESPENSA PATY","DESPENSA S.A.","DESPENSA SAMUELITO DE BENITEZ, SILVIA CA","DESPENSA SAN LUIS","FRIOS SAULITO DE CACERES CABRERA, LUANA","FRUTERIA BUEN PRECIO","GALEANO COMERCIAL","GONCALVES JUNIOR, ELPIDIO","Hermelinda Vera","Inmaculada Jara","Jennifer Royg Aguero","Jorge Raúl  Villalba  Caceres","Jorgelino Avalos","JUANA ORTEGA","MARCELO BEER","Maria Magdalena Fretez","Marilda Caceres","MARTA COMERCIAL","Ninfa Achucarro","PANADERIA MARUZEN","PANIFICADORA Q DELICIA","Ramona Beariz","Rumilda Gonzalez","TIMO COMERCIAL DE FERREIRA ORTEGA, JULIA","UN POCO DE TODO","Victor Morinigo","Viviana Gómez de Arguello"],"total_compradores":50,"total_vendido":5090365,"meta_pct":0.9,"cobertura_pct":0.2092}},"historico":{"01-Enero":{"MOGUL":{"compradores":9,"vendido":810115,"cobertura_pct":0.0377},"MENTHO PLUS":{"compradores":15,"vendido":910003,"cobertura_pct":0.0628},"ROCKLETS":{"compradores":36,"vendido":2883189,"cobertura_pct":0.1506},"SALADIX":{"compradores":49,"vendido":5205528,"cobertura_pct":0.205},"TORTUGUITA":{"compradores":85,"vendido":20932647,"cobertura_pct":0.3556}},"02-Febrero":{"MOGUL":{"compradores":18,"vendido":1834384,"cobertura_pct":0.0753},"MENTHO PLUS":{"compradores":15,"vendido":813618,"cobertura_pct":0.0628},"ROCKLETS":{"compradores":40,"vendido":4218283,"cobertura_pct":0.1674},"SALADIX":{"compradores":51,"vendido":5414216,"cobertura_pct":0.2134},"TORTUGUITA":{"compradores":85,"vendido":21504763,"cobertura_pct":0.3556}},"03-Marzo":{"MOGUL":{"compradores":17,"vendido":1678522,"cobertura_pct":0.0711},"MENTHO PLUS":{"compradores":22,"vendido":1684671,"cobertura_pct":0.0921},"ROCKLETS":{"compradores":37,"vendido":4715320,"cobertura_pct":0.1548},"SALADIX":{"compradores":53,"vendido":8070052,"cobertura_pct":0.2218},"TORTUGUITA":{"compradores":84,"vendido":30709929,"cobertura_pct":0.3515}},"04-Abril":{"MOGUL":{"compradores":8,"vendido":351400,"cobertura_pct":0.0335},"MENTHO PLUS":{"compradores":2,"vendido":125494,"cobertura_pct":0.0084},"ROCKLETS":{"compradores":16,"vendido":686310,"cobertura_pct":0.0669},"SALADIX":{"compradores":20,"vendido":1072104,"cobertura_pct":0.0837},"TORTUGUITA":{"compradores":50,"vendido":5090365,"cobertura_pct":0.2092}}}},"Empresa - Empleado":{"total_clientes_ruta":13,"clientes_ruta":[{"codigo":"9010","nombre":"COMERCIAL TROPICAL DE CRISTALDO MENDIETA","barrio":"Obrero","dias":"TODOS LOS DIAS"},{"codigo":"10192","nombre":"D&F GROUP S.A.","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10586","nombre":"DAVIDA S.A","barrio":"Mariscal Estigarribia","dias":"TODOS LOS DIAS"},{"codigo":"10587","nombre":"DAVIDA S.A.","barrio":"San Gerardo","dias":"TODOS LOS DIAS"},{"codigo":"10593","nombre":"DAVIDA S.A.","barrio":"Defensores del Chaco","dias":"TODOS LOS DIAS"},{"codigo":"10009","nombre":"GRUPO ALVI S.A.","barrio":"San Juan Neuman","dias":"TODOS LOS DIAS"},{"codigo":"11006","nombre":"GUARDATI BRAVO, RICARDO","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"10532","nombre":"Jose Paulo Da Costa Mota","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"10038","nombre":"Julio Cesar Da Silva Gomez","barrio":"Obrero","dias":"TODOS LOS DIAS"},{"codigo":"8075","nombre":"POPAI S.A","barrio":"General Diaz","dias":"TODOS LOS DIAS"},{"codigo":"9147","nombre":"POPAI S.A 2","barrio":"San Antonio","dias":"TODOS LOS DIAS"},{"codigo":"11190","nombre":"VENTURIO S.A.","barrio":"Desconocido","dias":"TODOS LOS DIAS"},{"codigo":"11165","nombre":"Wisla S.A.","barrio":"Desconocido","dias":"TODOS LOS DIAS"}],"lines":{"MOGUL":{"compradores":["Cristobal Ramon Ataia Escurra","DAVIDA S.A"],"total_compradores":2,"total_vendido":1367025,"meta_pct":0.8,"cobertura_pct":0.1538},"MENTHO PLUS":{"compradores":["Adolfo Jimenez Paez","DAVIDA S.A"],"total_compradores":2,"total_vendido":693748,"meta_pct":0.6,"cobertura_pct":0.1538},"ROCKLETS":{"compradores":["DAVIDA S.A","Fernanda Michelly Gonzalez Acosta","Pablo Rodrigo Gonzalez Retamozo","Wisla S.A."],"total_compradores":4,"total_vendido":4053672,"meta_pct":0.8,"cobertura_pct":0.3077},"SALADIX":{"compradores":["DAVIDA S.A","DAVIDA S.A.","Luan Felipe Diaz Ibarra","Nelson Wilfrido Torres paez"],"total_compradores":4,"total_vendido":4389863,"meta_pct":0.8,"cobertura_pct":0.3077},"TORTUGUITA":{"compradores":["Adolfo Jimenez Paez","Christian Fabián Jara Páez","Eder David Zarate Salinas","Gladys Herrera Arce","LOURDES RAQUEL TORALES PERALTA","Luan Felipe Diaz Ibarra","Pablo Rodrigo Gonzalez Retamozo"],"total_compradores":7,"total_vendido":755030,"meta_pct":0.9,"cobertura_pct":0.5385}},"historico":{"01-Enero":{"MOGUL":{"compradores":12,"vendido":13782324,"cobertura_pct":0.9231},"MENTHO PLUS":{"compradores":5,"vendido":5086973,"cobertura_pct":0.3846},"ROCKLETS":{"compradores":9,"vendido":24090445,"cobertura_pct":0.6923},"SALADIX":{"compradores":12,"vendido":38659340,"cobertura_pct":0.9231},"TORTUGUITA":{"compradores":15,"vendido":322949695,"cobertura_pct":1.1538}},"02-Febrero":{"MOGUL":{"compradores":7,"vendido":7899521,"cobertura_pct":0.5385},"MENTHO PLUS":{"compradores":3,"vendido":1935048,"cobertura_pct":0.2308},"ROCKLETS":{"compradores":9,"vendido":17310574,"cobertura_pct":0.6923},"SALADIX":{"compradores":9,"vendido":21114551,"cobertura_pct":0.6923},"TORTUGUITA":{"compradores":12,"vendido":211382959,"cobertura_pct":0.9231}},"03-Marzo":{"MOGUL":{"compradores":7,"vendido":10091361,"cobertura_pct":0.5385},"MENTHO PLUS":{"compradores":5,"vendido":4763674,"cobertura_pct":0.3846},"ROCKLETS":{"compradores":11,"vendido":38723694,"cobertura_pct":0.8462},"SALADIX":{"compradores":14,"vendido":60764549,"cobertura_pct":1.0769},"TORTUGUITA":{"compradores":15,"vendido":113102273,"cobertura_pct":1.1538}},"04-Abril":{"MOGUL":{"compradores":2,"vendido":1367025,"cobertura_pct":0.1538},"MENTHO PLUS":{"compradores":2,"vendido":693748,"cobertura_pct":0.1538},"ROCKLETS":{"compradores":4,"vendido":4053672,"cobertura_pct":0.3077},"SALADIX":{"compradores":4,"vendido":4389863,"cobertura_pct":0.3077},"TORTUGUITA":{"compradores":7,"vendido":755030,"cobertura_pct":0.5385}}}}}
+;
+
+const LINE_COLORS = {
+  'MOGUL': '#f97316',
+  'MENTHO PLUS': '#22d3ee',
+  'ROCKLETS': '#a855f7',
+  'SALADIX': '#10b981',
+  'TORTUGUITA': '#f43f5e'
+};
+
+const LINE_METAS = {
+  'MOGUL': 0.80,
+  'MENTHO PLUS': 0.60,
+  'ROCKLETS': 0.80,
+  'SALADIX': 0.80,
+  'TORTUGUITA': 0.90
+};
+
+const MONTHS = ['01-Enero','02-Febrero','03-Marzo','04-Abril'];
+const MONTH_LABELS = ['Ene','Feb','Mar','Abr'];
+
+let currentVendor = null;
+let currentTab = 'cobertura';
+let filterGrupo = 'TODOS';      // TODOS | COMPRADORES | NO_COMPRADORES
+let filterLinea = 'TODAS';      // TODAS | TORTUGUITA | MOGUL | ROCKLETS | SALADIX | MENTHO PLUS
+let clienteFilter = '';
+
+function formatGs(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n/1000).toFixed(0) + 'K';
+  return n.toString();
+}
+
+function pctColor(pct, meta) {
+  if (pct >= meta) return '#22c55e';
+  if (pct >= meta * 0.7) return '#eab308';
+  return '#ef4444';
+}
+
+function pctBadge(pct, meta) {
+  const p = (pct * 100).toFixed(0) + '%';
+  if (pct >= meta) return `<span class="line-badge badge-ok">✓ ${p}</span>`;
+  if (pct >= meta * 0.7) return `<span class="line-badge badge-warn">⚠ ${p}</span>`;
+  return `<span class="line-badge badge-bad">✗ ${p}</span>`;
+}
+
+// Init
+function init() {
+  const sel = document.getElementById('vendedorSelect');
+  Object.keys(DATA).forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v;
+    opt.textContent = v === 'SANTIAGO ROMERO' ? 'Santiago Romero' : v;
+    sel.appendChild(opt);
+  });
+  currentVendor = Object.keys(DATA)[0];
+  renderAll();
+}
+
+function onVendedorChange() {
+  currentVendor = document.getElementById('vendedorSelect').value;
+  renderAll();
+}
+
+function renderAll() {
+  renderCobertura();
+  renderClientes();
+  renderHistorico();
+  renderResumen();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('.tab')[['cobertura','clientes','historico','resumen'].indexOf(tab)].classList.add('active');
+}
+
+// ===== COBERTURA =====
+function renderCobertura() {
+  const v = DATA[currentVendor];
+  const lines = v.lines;
+  const vname = currentVendor === 'SANTIAGO ROMERO' ? 'Santiago Romero' : currentVendor;
+  
+  let html = '';
+
+  // Note for Santiago Romero
+  if (currentVendor === 'SANTIAGO ROMERO') {
+    html += `<div class="note-banner">ℹ️ <strong>Santiago Romero</strong> asumió en abril. Incluye histórico de Cristhian Luis Cano y Wilfrido Maidana Nuñez.</div>`;
+  }
+
+  // Vendor header
+  const totalGs = Object.values(lines).reduce((s,l) => s + l.total_vendido, 0);
+  const uniqueCompradores = new Set(Object.values(lines).flatMap(l => l.compradores)).size;
+  
+  html += `
+  <div class="vendor-header">
+    <div class="vendor-name">${vname}</div>
+    <div class="vendor-meta">
+      <div class="vendor-stat">
+        <span class="vendor-stat-val">${v.total_clientes_ruta}</span>
+        <span class="vendor-stat-label">Clientes Ruta</span>
+      </div>
+      <div class="vendor-stat">
+        <span class="vendor-stat-val">${uniqueCompradores}</span>
+        <span class="vendor-stat-label">Compradores Abr</span>
+      </div>
+      <div class="vendor-stat">
+        <span class="vendor-stat-val">Gs ${formatGs(totalGs)}</span>
+        <span class="vendor-stat-label">Total Vendido</span>
+      </div>
+    </div>
+  </div>`;
+
+  html += `<div class="section-title">Cobertura por Línea · Abril 2026</div>`;
+  html += `<div class="lines-grid">`;
+
+  ['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].forEach(line => {
+    const ld = lines[line];
+    const meta = ld.meta_pct;
+    const pct = ld.cobertura_pct;
+    const color = LINE_COLORS[line];
+    const fillColor = pctColor(pct, meta);
+    const fillW = Math.min((pct / meta) * 100, 100);
+    const metaW = 100; // meta is always 100% of the track
+
+    html += `
+    <div class="line-card" style="border-left-color:${color}">
+      <div class="line-header">
+        <span class="line-name" style="color:${color}">${line}</span>
+        ${pctBadge(pct, meta)}
+      </div>
+      <div class="progress-row">
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${fillW}%;background:${fillColor}"></div>
+          <div class="meta-marker" style="left:100%"></div>
+        </div>
+        <span class="progress-pct" style="color:${fillColor}">${(pct*100).toFixed(1)}%</span>
+      </div>
+      <div class="progress-meta">
+        <span>${ld.total_compradores} compradores / ${v.total_clientes_ruta} clientes</span>
+        <span>Meta: ${(meta*100).toFixed(0)}%</span>
+      </div>
+      <div class="line-amounts">
+        <div class="line-amount-item">
+          <span class="line-amount-val">Gs ${formatGs(ld.total_vendido)}</span>
+          <span class="line-amount-label">Vendido Abril</span>
+        </div>
+        <div class="line-amount-item">
+          <span class="line-amount-val">${((pct/meta)*100).toFixed(0)}%</span>
+          <span class="line-amount-label">vs Meta</span>
+        </div>
+        <div class="line-amount-item">
+          <span class="line-amount-val">${v.total_clientes_ruta - ld.total_compradores}</span>
+          <span class="line-amount-label">Sin Comprar</span>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  html += `</div>`;
+  document.getElementById('cobertura-content').innerHTML = html;
+}
+
+// ===== CLIENTES =====
+function renderClientes() {
+  const v = DATA[currentVendor];
+  const lines_data = v.lines;
+
+  // Build set of compradores per line (lowercase)
+  const compradoresByLine = {};
+  ['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].forEach(line => {
+    compradoresByLine[line] = new Set(
+      (lines_data[line]?.compradores || []).map(n => n.toLowerCase().trim())
+    );
+  });
+
+  // Deduplicate ruta clients by name
+  const rutaClientes = v.clientes_ruta || [];
+  const seen = new Set();
+  const uniqueClientes = rutaClientes.filter(c => {
+    const key = c.nombre.toLowerCase().trim();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  // Tag each client with which lines they bought
+  const withStatus = uniqueClientes.map(c => {
+    const nameKey = c.nombre.toLowerCase().trim();
+    const bought = {};
+    ['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].forEach(line => {
+      bought[line] = compradoresByLine[line].has(nameKey) ||
+        [...compradoresByLine[line]].some(cp =>
+          cp.includes(nameKey.substring(0, 10)) || nameKey.includes(cp.substring(0, 10))
+        );
+    });
+    const anyBought = Object.values(bought).some(b => b);
+    return { ...c, bought, anyBought };
+  });
+
+  // ---- Apply dual filter ----
+  // 1. Text search
+  const search = (document.getElementById('clienteSearch')?.value || clienteFilter).toLowerCase();
+  let filtered = withStatus;
+  if (search) {
+    filtered = filtered.filter(c =>
+      c.nombre.toLowerCase().includes(search) || c.barrio.toLowerCase().includes(search)
+    );
+  }
+
+  // 2. Grupo (TODOS / COMPRADORES / NO_COMPRADORES) × Línea (TODAS / specific)
+  const lineaActiva = filterLinea !== 'TODAS';
+
+  filtered = filtered.filter(c => {
+    const boughtLine = lineaActiva ? c.bought[filterLinea] : null;
+
+    if (filterGrupo === 'COMPRADORES') {
+      // Must have bought — if line selected, must have bought THAT line
+      return lineaActiva ? boughtLine : c.anyBought;
+    } else if (filterGrupo === 'NO_COMPRADORES') {
+      // Must NOT have bought — if line selected, must NOT have bought THAT line
+      return lineaActiva ? !boughtLine : !c.anyBought;
+    } else {
+      // TODOS — if line selected, show all but the indicator dot reflects that line
+      return true;
+    }
+  });
+
+  // Stats
+  const totalRuta = uniqueClientes.length;
+  const totalCompraron = withStatus.filter(c => c.anyBought).length;
+
+  // ---- Build UI ----
+  // Grupo filter row
+  const grupoButtons = [
+    { key: 'TODOS',          label: 'Todos',         bg: '#3b82f6' },
+    { key: 'COMPRADORES',    label: '✓ Compradores', bg: '#22c55e' },
+    { key: 'NO_COMPRADORES', label: '✗ No Compró',  bg: '#ef4444' },
+  ];
+
+  // Line filter row
+  const lineaButtons = [
+    { key: 'TODAS', label: 'Todas las líneas', bg: '#6b7280' },
+    ...['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].map(l => ({
+      key: l, label: l, bg: LINE_COLORS[l]
+    }))
+  ];
+
+  let html = `
+  <input type="text" class="search-box" placeholder="🔍 Buscar cliente o barrio..."
+    id="clienteSearch" oninput="filterClientes()" value="${clienteFilter}">
+
+  <div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700;letter-spacing:0.5px;margin-bottom:5px">¿Quiénes?</div>
+  <div class="line-filter-row" style="margin-bottom:10px">
+    ${grupoButtons.map(b => `
+      <button class="lf-btn" style="${filterGrupo===b.key ? `background:${b.bg};border-color:${b.bg};color:#fff` : ''}"
+        onclick="setGrupoFilter('${b.key}')">${b.label}</button>
+    `).join('')}
+  </div>
+
+  <div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700;letter-spacing:0.5px;margin-bottom:5px">¿De qué línea?</div>
+  <div class="line-filter-row" style="margin-bottom:12px">
+    ${lineaButtons.map(b => `
+      <button class="lf-btn" style="${filterLinea===b.key ? `background:${b.bg};border-color:${b.bg};color:#fff` : ''}"
+        onclick="setLineaFilter('${b.key}')">${b.label.split(' ')[0]}</button>
+    `).join('')}
+  </div>`;
+
+  // Active filter summary pill
+  if (filterGrupo !== 'TODOS' || filterLinea !== 'TODAS') {
+    const gLabel = grupoButtons.find(b => b.key === filterGrupo)?.label || '';
+    const lLabel = filterLinea === 'TODAS' ? 'todas las líneas' : filterLinea;
+    html += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;padding:6px 10px;background:rgba(59,130,246,0.1);border-radius:8px;border:1px solid rgba(59,130,246,0.25)">
+      <span style="font-size:11px;color:#93c5fd;flex:1">🔎 ${gLabel} · ${lLabel}</span>
+      <button onclick="resetFiltros()" style="background:none;border:none;color:#ef4444;font-size:11px;font-weight:700;cursor:pointer;padding:0">✕ Limpiar</button>
+    </div>`;
+  }
+
+  // Count row
+  html += `<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:11px;color:var(--muted)">
+    <span>Mostrando <strong style="color:var(--text)">${filtered.length}</strong> de ${totalRuta}</span>
+    <span>✓ <strong style="color:#22c55e">${totalCompraron}</strong> compraron · ✗ <strong style="color:#ef4444">${totalRuta - totalCompraron}</strong> no</span>
+  </div>`;
+
+  // Dot legend
+  html += `<div class="legend" style="margin-bottom:8px">
+    ${['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].map(l =>
+      `<div class="legend-item"><div class="legend-dot" style="background:${LINE_COLORS[l]}"></div><span style="font-size:10px">${l.split(' ')[0]}</span></div>`
+    ).join('')}
+  </div>`;
+
+  // Client list
+  html += `<div class="cliente-list">`;
+
+  filtered.slice(0, 300).forEach(c => {
+    // Status dot = relevant to active line filter, or any-bought if no line filter
+    const dotBought = filterLinea !== 'TODAS' ? c.bought[filterLinea] : c.anyBought;
+
+    html += `
+    <div class="cliente-item">
+      <div class="cliente-status ${dotBought ? 'status-ok' : 'status-no'}"></div>
+      <div style="flex:1;min-width:0">
+        <div class="cliente-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.nombre}</div>
+        <div class="cliente-barrio">${c.barrio}</div>
+      </div>
+      <div class="cliente-lines">
+        ${['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].map(line => {
+          const isActive = filterLinea === line;
+          return `<div class="cl-dot ${c.bought[line]?'bought':''}"
+            style="background:${LINE_COLORS[line]};${isActive?'width:9px;height:9px;':''}"
+            title="${line}"></div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+
+  if (filtered.length > 300) {
+    html += `<div style="text-align:center;padding:10px;color:var(--muted);font-size:12px">... y ${filtered.length - 300} más. Usá el buscador.</div>`;
+  }
+
+  if (filtered.length === 0) {
+    html += `<div class="empty"><div class="empty-icon">🔍</div><div>No hay clientes con ese filtro</div></div>`;
+  }
+
+  // Extra compradores not in ruta
+  const allCompradores = new Set(
+    Object.values(lines_data).flatMap(l => l.compradores || []).map(n => n.toLowerCase().trim())
+  );
+  const rutaNames = new Set(uniqueClientes.map(c => c.nombre.toLowerCase().trim()));
+  const extraCompradores = [...allCompradores].filter(n => !rutaNames.has(n));
+
+  if (extraCompradores.length > 0 && !search && filterGrupo !== 'NO_COMPRADORES') {
+    html += `<div style="margin-top:12px;padding:10px;background:rgba(234,179,8,0.08);border-radius:8px;border:1px solid rgba(234,179,8,0.2)">
+      <div style="font-size:11px;color:#eab308;font-weight:700;margin-bottom:6px">⚠ ${extraCompradores.length} COMPRADORES FUERA DE RUTA ASIGNADA</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6">${extraCompradores.slice(0, 12).join(' · ')}${extraCompradores.length > 12 ? ' · ...' : ''}</div>
+    </div>`;
+  }
+
+  html += `</div>`;
+  document.getElementById('clientes-content').innerHTML = html;
+
+  // Re-attach search event
+  const searchEl = document.getElementById('clienteSearch');
+  if (searchEl) searchEl.addEventListener('input', filterClientes);
+}
+
+function filterClientes() {
+  clienteFilter = document.getElementById('clienteSearch')?.value || '';
+  renderClientes();
+}
+
+function setGrupoFilter(grupo) {
+  filterGrupo = grupo;
+  renderClientes();
+}
+
+function setLineaFilter(linea) {
+  filterLinea = linea;
+  renderClientes();
+}
+
+function resetFiltros() {
+  filterGrupo = 'TODOS';
+  filterLinea = 'TODAS';
+  clienteFilter = '';
+  renderClientes();
+}
+
+// ===== HISTORICO =====
+function renderHistorico() {
+  const v = DATA[currentVendor];
+  const hist = v.historico;
+  const vname = currentVendor === 'SANTIAGO ROMERO' ? 'Santiago Romero' : currentVendor;
+
+  let html = `<div class="section-title">Evolución Mensual · ${vname}</div>`;
+
+  ['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].forEach(line => {
+    const color = LINE_COLORS[line];
+    const meta = LINE_METAS[line];
+    
+    html += `<div class="hist-table" style="margin-bottom:12px">
+      <div style="padding:10px 12px;background:rgba(0,0,0,0.3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:${color};text-transform:uppercase;letter-spacing:0.5px">${line}</span>
+        <span style="font-size:10px;color:var(--muted);text-transform:uppercase">Meta: ${(meta*100).toFixed(0)}%</span>
+      </div>`;
+
+    // Mini trend bars
+    const maxCompradores = Math.max(...MONTHS.map(m => hist[m]?.[line]?.compradores || 0));
+    html += `<div style="padding:10px 12px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;gap:6px;align-items:flex-end;height:40px;margin-bottom:4px">`;
+    
+    MONTHS.forEach((m, i) => {
+      const d = hist[m]?.[line] || {};
+      const h = maxCompradores > 0 ? Math.max(4, (d.compradores / maxCompradores) * 36) : 4;
+      const c = pctColor(d.cobertura_pct || 0, meta);
+      const isAbril = i === 3;
+      html += `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:9px;color:var(--muted);font-weight:600">${(d.cobertura_pct*100||0).toFixed(0)}%</div>
+        <div style="width:100%;height:${h}px;background:${c};border-radius:2px 2px 0 0;opacity:${isAbril?1:0.5}"></div>
+        <div style="font-size:9px;color:${isAbril?'var(--text)':'var(--muted)'}";font-weight:${isAbril?700:400}>${MONTH_LABELS[i]}</div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+
+    // Table rows
+    MONTHS.forEach((m, i) => {
+      const d = hist[m]?.[line] || {};
+      const isAbril = i === 3;
+      const pct = d.cobertura_pct || 0;
+      const color2 = pctColor(pct, meta);
+      html += `<div class="hist-row ${isAbril?'hist-row-abril':''}" style="grid-template-columns:70px 1fr 1fr 1fr">
+        <div style="font-weight:${isAbril?700:400};color:${isAbril?'#93c5fd':'var(--muted)'};font-size:12px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase">${MONTH_LABELS[i]}</div>
+        <div class="hist-cell">
+          <span class="hist-cell-val" style="color:${color2}">${(pct*100).toFixed(1)}%</span>
+          <span class="hist-cell-sub">cobertura</span>
+        </div>
+        <div class="hist-cell">
+          <span class="hist-cell-val">${d.compradores||0}</span>
+          <span class="hist-cell-sub">clientes</span>
+        </div>
+        <div class="hist-cell">
+          <span class="hist-cell-val">Gs ${formatGs(d.vendido||0)}</span>
+          <span class="hist-cell-sub">vendido</span>
+        </div>
+      </div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  document.getElementById('historico-content').innerHTML = html;
+}
+
+// ===== RESUMEN GENERAL =====
+function renderResumen() {
+  let html = `<div class="section-title">Resumen Equipo · Abril 2026</div>`;
+  html += `<div class="summary-table">`;
+
+  // Sort by tortuguita cobertura desc
+  const vendors = Object.keys(DATA).sort((a, b) => {
+    const pa = DATA[a].lines['TORTUGUITA']?.cobertura_pct || 0;
+    const pb = DATA[b].lines['TORTUGUITA']?.cobertura_pct || 0;
+    return pb - pa;
+  });
+
+  vendors.forEach(v => {
+    const vd = DATA[v];
+    const vname = v === 'SANTIAGO ROMERO' ? 'Santiago Romero' : v;
+    const lines = vd.lines;
+
+    html += `<div class="sum-row" onclick="selectVendorAndTab('${v}','cobertura')">
+      <div class="sum-row-title">
+        <span class="sum-vendor-name">${vname}</span>
+        <span class="sum-clientes">${vd.total_clientes_ruta} clientes</span>
+      </div>
+      <div class="sum-lines-row">`;
+
+    ['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].forEach(line => {
+      const ld = lines[line];
+      const meta = ld.meta_pct;
+      const pct = ld.cobertura_pct;
+      const c = LINE_COLORS[line];
+      const fc = pctColor(pct, meta);
+      
+      html += `<div class="sum-line-chip" style="background:${fc}20;border-color:${fc}40">
+        <div style="width:5px;height:5px;border-radius:50%;background:${c}"></div>
+        <span style="color:${fc};font-size:10px;font-weight:700">${(pct*100).toFixed(0)}%</span>
+      </div>`;
+    });
+
+    html += `</div>
+      <div style="margin-top:6px;font-size:10px;color:var(--muted)">
+        ${['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].map(l => 
+          `<span style="margin-right:8px">${l.split(' ')[0]}: ${lines[l].total_compradores}/${vd.total_clientes_ruta}</span>`
+        ).join('')}
+      </div>
+    </div>`;
+  });
+
+  html += `</div>`;
+
+  // Global stats
+  html += `<div class="section-title" style="margin-top:16px">Leyenda de Metas</div>`;
+  html += `<div class="hist-table">`;
+  ['TORTUGUITA','MOGUL','ROCKLETS','SALADIX','MENTHO PLUS'].forEach(line => {
+    html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border)">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;color:${LINE_COLORS[line]};text-transform:uppercase;font-size:14px">${line}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--text)">${(LINE_METAS[line]*100).toFixed(0)}% de cobertura</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  document.getElementById('resumen-content').innerHTML = html;
+}
+
+function selectVendorAndTab(vendor, tab) {
+  document.getElementById('vendedorSelect').value = vendor;
+  currentVendor = vendor;
+  renderAll();
+  switchTab(tab);
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
