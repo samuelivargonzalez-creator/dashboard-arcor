@@ -44,16 +44,22 @@
   <div class="menu">
 
     <a class="card" href="pagina1.html">
-      <h2>Avance Ventas</h2>
+      <h2>Consulta 1</h2>
       <p>Descripción breve de lo que hace</p>
     </a>
 
     <a class="card" href="pagina2.html">
-      <h2>Promo Mundial</h2>
+      <h2>Consulta 2</h2>
       <p>Descripción breve de lo que hace</p>
     </a>
 
-       -->
+    <!-- Para agregar más: copiar el bloque de arriba -->
+    <!-- 
+    <a class="card" href="pagina3.html">
+      <h2>Consulta 3</h2>
+      <p>Nueva consulta</p>
+    </a>
+    -->
 
   </div>
 
